@@ -13,6 +13,7 @@ import com.alibaba.repeater.console.start.controller.vo.PagerAdapter;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,6 +34,12 @@ public class ModuleConfigController {
 
     @Resource
     private ModuleConfigService moduleConfigService;
+
+    @ResponseBody
+    @GetMapping(path = "/")
+    public PageResult<ModuleConfigBO> list(@ModelAttribute("params") ModuleConfigParams params) {
+        return moduleConfigService.list(params);
+    }
 
     @RequestMapping("list.htm")
     public String list(@ModelAttribute("requestParams") ModuleConfigParams params, Model model) {
@@ -65,14 +72,14 @@ public class ModuleConfigController {
     public String add(Model model) {
         RepeaterConfig defaultConf = new RepeaterConfig();
         List<Behavior> behaviors = Lists.newArrayList();
-        defaultConf.setPluginIdentities(Lists.newArrayList( "http", "java-entrance", "java-subInvoke"));
+        defaultConf.setPluginIdentities(Lists.newArrayList("http", "java-entrance", "java-subInvoke"));
         defaultConf.setRepeatIdentities(Lists.newArrayList("java", "http"));
         defaultConf.setUseTtl(true);
         defaultConf.setHttpEntrancePatterns(Lists.newArrayList("^/regress/.*$"));
         behaviors.add(new Behavior("com.alibaba.repeater.console.service.impl.RegressServiceImpl", "getRegress"));
         defaultConf.setJavaEntranceBehaviors(behaviors);
         List<Behavior> subBehaviors = Lists.newArrayList();
-        subBehaviors.add(new Behavior("com.alibaba.repeater.console.service.impl.RegressServiceImpl", "getRegressInner", "findPartner","slogan"));
+        subBehaviors.add(new Behavior("com.alibaba.repeater.console.service.impl.RegressServiceImpl", "getRegressInner", "findPartner", "slogan"));
         defaultConf.setJavaSubInvokeBehaviors(subBehaviors);
         try {
             model.addAttribute("config", JacksonUtil.serialize(defaultConf));

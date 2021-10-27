@@ -8,10 +8,7 @@ import com.alibaba.repeater.console.service.ModuleInfoService;
 import com.alibaba.repeater.console.start.controller.vo.PagerAdapter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -29,6 +26,12 @@ public class ModuleInfoController {
 
     @Resource
     private ModuleInfoService moduleInfoService;
+
+    @ResponseBody
+    @GetMapping(path = "/")
+    public PageResult<ModuleInfoBO> module(@ModelAttribute("params") ModuleInfoParams params) {
+        return moduleInfoService.query(params);
+    }
 
     @RequestMapping("list.htm")
     public String list(@ModelAttribute("requestParams") ModuleInfoParams params, Model model) {

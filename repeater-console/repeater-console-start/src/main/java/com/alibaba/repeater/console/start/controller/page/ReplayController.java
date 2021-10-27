@@ -29,11 +29,11 @@ public class ReplayController {
     public String detail(@ModelAttribute("requestParams") ReplayParams params, Model model) {
         RepeaterResult<ReplayBO> result = replayService.query(params);
         if (!result.isSuccess()) {
-            return "/error/404";
+            return "error/404";
         }
         model.addAttribute("replay", result.getData());
         model.addAttribute("record", result.getData().getRecord());
-        return "/replay/detail";
+        return "replay/detail";
     }
 
     @RequestMapping("execute.json")

@@ -15,6 +15,6 @@ public class RegressPageController {
 
     @RequestMapping("/index.htm")
     public String index() {
-        return "/regress/index";
+        return "regress/index";
     }
 }

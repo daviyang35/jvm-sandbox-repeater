@@ -7,8 +7,10 @@ import com.alibaba.repeater.console.common.domain.RecordDetailBO;
 import com.alibaba.repeater.console.common.params.RecordParams;
 import com.alibaba.repeater.console.service.RecordService;
 import com.alibaba.repeater.console.start.controller.vo.PagerAdapter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,17 +29,26 @@ import javax.annotation.Resource;
 public class OnlineController {
 
     @Resource
+    private ObjectMapper objectMapper;
+
+    @Resource
     private RecordService recordService;
 
+    @ResponseBody
+    @GetMapping(path = "/")
+    public PageResult<RecordBO> onlineRecords(@ModelAttribute RecordParams params) {
+        return recordService.query(params);
+    }
+
     @RequestMapping("search.htm")
-    public String search(@ModelAttribute("requestParams") RecordParams params, Model model){
+    public String search(@ModelAttribute("requestParams") RecordParams params, Model model) {
         PageResult<RecordBO> result = recordService.query(params);
-        PagerAdapter.transform0(result,model);
+        PagerAdapter.transform0(result, model);
         return "online/search";
     }
 
     @RequestMapping("detail.htm")
-    public String detail(@ModelAttribute("requestParams") RecordParams params, Model model){
+    public String detail(@ModelAttribute("requestParams") RecordParams params, Model model) {
         RepeaterResult<RecordDetailBO> result = recordService.getDetail(params);
         if (!result.isSuccess()) {
             return "/error/404";
