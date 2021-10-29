@@ -45,6 +45,12 @@ public class ModuleConfigController {
         return moduleConfigService.push(params);
     }
 
+    @ResponseBody
+    @PostMapping("detail")
+    public RepeaterResult<ModuleConfigBO> detail(@RequestBody ModuleConfigParams params) {
+        return moduleConfigService.query(params);
+    }
+
     @RequestMapping("list.htm")
     public String list(@ModelAttribute("requestParams") ModuleConfigParams params, Model model) {
         PageResult<ModuleConfigBO> result = moduleConfigService.list(params);
@@ -53,7 +59,7 @@ public class ModuleConfigController {
     }
 
     @RequestMapping("detail.htm")
-    public String detail(@ModelAttribute("requestParams") ModuleConfigParams params, Model model) {
+    public String detailModel(@ModelAttribute("requestParams") ModuleConfigParams params, Model model) {
         RepeaterResult<ModuleConfigBO> result = moduleConfigService.query(params);
         if (!result.isSuccess()) {
             return "/error/404";
