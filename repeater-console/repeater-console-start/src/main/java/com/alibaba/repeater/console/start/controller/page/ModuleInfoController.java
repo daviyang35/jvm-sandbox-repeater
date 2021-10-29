@@ -33,6 +33,18 @@ public class ModuleInfoController {
         return moduleInfoService.query(params);
     }
 
+    @ResponseBody
+    @PostMapping(path = "/frozen")
+    public RepeaterResult<ModuleInfoBO> frozen(@RequestBody ModuleInfoParams params) {
+        return moduleInfoService.frozen(params);
+    }
+
+    @ResponseBody
+    @PostMapping(path = "/reload")
+    public RepeaterResult<String> reload(@RequestBody ModuleInfoParams params) {
+        return moduleInfoService.reload(params);
+    }
+
     @RequestMapping("list.htm")
     public String list(@ModelAttribute("requestParams") ModuleInfoParams params, Model model) {
         PageResult<ModuleInfoBO> result = moduleInfoService.query(params);
@@ -60,7 +72,7 @@ public class ModuleInfoController {
 
     @ResponseBody
     @RequestMapping("/frozen.json")
-    public RepeaterResult<ModuleInfoBO> frozen(@ModelAttribute("requestParams") ModuleInfoParams params) {
+    public RepeaterResult<ModuleInfoBO> frozenModel(@ModelAttribute("requestParams") ModuleInfoParams params) {
         return moduleInfoService.frozen(params);
     }
 
@@ -72,7 +84,7 @@ public class ModuleInfoController {
 
     @ResponseBody
     @RequestMapping("/reload.json")
-    public RepeaterResult<String> reload(@ModelAttribute("requestParams") ModuleInfoParams params) {
+    public RepeaterResult<String> reloadModel(@ModelAttribute("requestParams") ModuleInfoParams params) {
         return moduleInfoService.reload(params);
     }
 }

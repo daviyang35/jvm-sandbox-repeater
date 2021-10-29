@@ -1,11 +1,11 @@
 package com.alibaba.repeater.console.dal.repository;
 
-        import com.alibaba.repeater.console.common.exception.BizException;
-        import com.alibaba.repeater.console.dal.model.Record;
-        import org.springframework.data.jpa.repository.JpaRepository;
-        import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-        import org.springframework.stereotype.Repository;
-        import org.springframework.transaction.annotation.Transactional;
+import com.alibaba.repeater.console.common.exception.BizException;
+import com.alibaba.repeater.console.dal.model.Record;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * {@link }

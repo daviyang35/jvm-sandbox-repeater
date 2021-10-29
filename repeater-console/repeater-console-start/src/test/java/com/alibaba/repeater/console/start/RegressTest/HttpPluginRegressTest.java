@@ -21,7 +21,7 @@ public class HttpPluginRegressTest {
             dataProvider = "HttpPluginTestDataProvider",
             dataProviderClass = HttpPluginTestDataProvider.class
     )
-    public void httpPluginRecordRepeateTest(String url){
+    public void httpPluginRecordRepeateTest(String url) {
         try {
             String traceId = TraceGenerator.generate();
             // record

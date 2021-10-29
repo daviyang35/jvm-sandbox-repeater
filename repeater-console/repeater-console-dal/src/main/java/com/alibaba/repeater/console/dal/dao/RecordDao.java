@@ -36,7 +36,7 @@ public class RecordDao {
     }
 
     public Page<Record> selectByAppNameOrTraceId(@NotNull final RecordParams params) {
-        Pageable pageable = new PageRequest(params.getPage() - 1, params.getSize(), new Sort(Sort.Direction.DESC,"id"));
+        Pageable pageable = new PageRequest(params.getPage() - 1, params.getSize(), new Sort(Sort.Direction.DESC, "id"));
         return recordRepository.findAll(
                 (root, query, cb) -> {
                     List<Predicate> predicates = Lists.newArrayList();

@@ -28,7 +28,7 @@ public class ModuleConfigBO extends BaseBO {
 
     private RepeaterConfig configModel;
 
-    private String config;
+    private String configPreview;
 
     @Override
     public String toString() {

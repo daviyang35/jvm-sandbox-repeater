@@ -1,5 +1,6 @@
 package com.alibaba.repeater.console.start.controller.page;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.serialize.SerializeException;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.Behavior;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.RepeaterConfig;
@@ -13,10 +14,7 @@ import com.alibaba.repeater.console.start.controller.vo.PagerAdapter;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -41,6 +39,12 @@ public class ModuleConfigController {
         return moduleConfigService.list(params);
     }
 
+    @PostMapping(path = "push")
+    @ResponseBody
+    public RepeaterResult<ModuleConfigBO> push(@RequestBody ModuleConfigParams params) {
+        return moduleConfigService.push(params);
+    }
+
     @RequestMapping("list.htm")
     public String list(@ModelAttribute("requestParams") ModuleConfigParams params, Model model) {
         PageResult<ModuleConfigBO> result = moduleConfigService.list(params);
@@ -54,7 +58,8 @@ public class ModuleConfigController {
         if (!result.isSuccess()) {
             return "/error/404";
         }
-        model.addAttribute("config", result.getData().getConfig());
+
+        model.addAttribute("config", JSON.toJSONString(result.getData().getConfigModel()));
         return "config/detail";
     }
 
@@ -64,7 +69,7 @@ public class ModuleConfigController {
         if (!result.isSuccess()) {
             return "/error/404";
         }
-        model.addAttribute("config", result.getData().getConfig());
+        model.addAttribute("config", JSON.toJSONString(result.getData().getConfigModel()));
         return "config/edit";
     }
 
@@ -98,7 +103,7 @@ public class ModuleConfigController {
 
     @RequestMapping("push.json")
     @ResponseBody
-    public RepeaterResult<ModuleConfigBO> push(@ModelAttribute("requestParams") ModuleConfigParams params) {
+    public RepeaterResult<ModuleConfigBO> pushModel(@ModelAttribute("requestParams") ModuleConfigParams params) {
         return moduleConfigService.push(params);
     }
 

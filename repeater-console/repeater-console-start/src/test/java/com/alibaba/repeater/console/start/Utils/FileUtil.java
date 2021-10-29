@@ -1,13 +1,15 @@
 package com.alibaba.repeater.console.start.Utils;
 
 import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 
 public class FileUtil {
 
     /**
      * 查找到指定的Data文件
-     * @param folder 待搜索的文件目录
+     *
+     * @param folder   待搜索的文件目录
      * @param fileName 文件名
      * @return 已匹配文件
      */
@@ -16,7 +18,7 @@ public class FileUtil {
             return null;
         }
         File[] files = folder.listFiles();
-        if(files != null){
+        if (files != null) {
             for (File file : files) {
                 if (file.isFile() && file.getName().equals(fileName)) {
                     return file;
@@ -33,6 +35,7 @@ public class FileUtil {
 
     /**
      * 获取当前目录
+     *
      * @param fileName 文件名称
      * @return 已匹配文件(递归式搜索)
      */

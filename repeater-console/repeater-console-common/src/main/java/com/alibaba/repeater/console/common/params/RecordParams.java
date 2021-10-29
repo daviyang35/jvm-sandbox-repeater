@@ -1,6 +1,9 @@
 package com.alibaba.repeater.console.common.params;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * {@link RecordParams}

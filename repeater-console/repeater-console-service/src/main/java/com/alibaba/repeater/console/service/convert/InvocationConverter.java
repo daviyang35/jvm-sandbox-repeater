@@ -5,7 +5,6 @@ import com.alibaba.jvm.sandbox.repeater.plugin.core.serialize.Serializer;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.serialize.SerializerProvider;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.Invocation;
 import com.alibaba.repeater.console.common.domain.InvocationBO;
-import com.alibaba.repeater.console.service.util.JacksonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;

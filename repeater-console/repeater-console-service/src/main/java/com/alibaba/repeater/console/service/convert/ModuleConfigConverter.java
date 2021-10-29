@@ -25,6 +25,7 @@ public class ModuleConfigConverter implements ModelConverter<ModuleConfig, Modul
         BeanUtils.copyProperties(source, bo);
         try {
             bo.setConfigModel(JacksonUtil.deserialize(source.getConfig(), RepeaterConfig.class));
+            bo.setConfigPreview(bo.getConfigModel().toString());
         } catch (SerializeException e) {
             log.error("error occurred when deserialize module config", e);
         }

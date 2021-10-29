@@ -2,14 +2,12 @@ package com.alibaba.repeater.console.service.util;
 
 import com.alibaba.jvm.sandbox.repeater.plugin.core.serialize.SerializeException;
 import com.alibaba.repeater.console.service.serialize.CustomJavaTimeModule;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import java.lang.Exception;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -39,7 +37,7 @@ public class JacksonUtil {
     }
 
     public static String serialize(Object object) throws SerializeException {
-        return serialize(object,true);
+        return serialize(object, true);
     }
 
     public static String serialize(Object object, boolean pretty) throws SerializeException {

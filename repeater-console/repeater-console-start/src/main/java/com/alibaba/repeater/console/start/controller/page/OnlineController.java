@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
  * {@link OnlineController}
@@ -47,8 +48,19 @@ public class OnlineController {
         return "online/search";
     }
 
+    @ResponseBody
+    @GetMapping(path = "/details")
+    public RepeaterResult<RecordDetailBO> details(@ModelAttribute("params") RecordParams params) {
+        RepeaterResult<RecordDetailBO> result = recordService.getDetail(params);
+        if (Objects.isNull(result)) {
+            return RepeaterResult.builder().success(false).message("记录不存在").build();
+        }
+        return result;
+    }
+
     @RequestMapping("detail.htm")
     public String detail(@ModelAttribute("requestParams") RecordParams params, Model model) {
+
         RepeaterResult<RecordDetailBO> result = recordService.getDetail(params);
         if (!result.isSuccess()) {
             return "/error/404";

@@ -48,9 +48,8 @@ public class RegressController {
         if (partner.getData().equals(female) && male.equals(name)) {
             return "天哪!李雷和韩梅梅终于在一起了~";
         }
-        return  name + "成功匹配到小伙伴[" + partner.getData() + "]!";
+        return name + "成功匹配到小伙伴[" + partner.getData() + "]!";
     }
-
 
 
     /**

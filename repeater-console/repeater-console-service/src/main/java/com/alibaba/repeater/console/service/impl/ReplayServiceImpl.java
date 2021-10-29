@@ -107,9 +107,9 @@ public class ReplayServiceImpl implements ReplayService {
         Object actual;
         try {
             if (rm.getResponse() instanceof String) {
-                replay.setResponse(ConvertUtil.convert2Json((String)rm.getResponse()));
+                replay.setResponse(ConvertUtil.convert2Json((String) rm.getResponse()));
                 try {
-                    actual = JacksonUtil.deserialize((String)rm.getResponse(), Object.class);
+                    actual = JacksonUtil.deserialize((String) rm.getResponse(), Object.class);
                 } catch (SerializeException e) {
                     actual = rm.getResponse();
                 }
@@ -166,7 +166,7 @@ public class ReplayServiceImpl implements ReplayService {
         } catch (SerializeException e) {
             return RepeaterResult.builder().success(false).message(e.getMessage()).build();
         }
-        HttpUtil.Resp resp = HttpUtil.doPost(String.format(repeatURL,params.getIp(),params.getPort()), requestParams);
+        HttpUtil.Resp resp = HttpUtil.doPost(String.format(repeatURL, params.getIp(), params.getPort()), requestParams);
         if (resp.isSuccess()) {
             return RepeaterResult.builder().success(true).message("operate success").data(meta.getRepeatId()).build();
         }

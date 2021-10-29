@@ -2,11 +2,10 @@ package com.alibaba.repeater.console.service;
 
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.RepeatModel;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.RepeaterResult;
-import com.alibaba.repeater.console.common.domain.RecordBO;
 import com.alibaba.repeater.console.common.domain.PageResult;
+import com.alibaba.repeater.console.common.domain.RecordBO;
 import com.alibaba.repeater.console.common.domain.RecordDetailBO;
 import com.alibaba.repeater.console.common.params.RecordParams;
-import com.alibaba.repeater.console.common.params.ReplayParams;
 
 /**
  * {@link RecordService} 存储服务示例
@@ -43,6 +42,7 @@ public interface RecordService {
 
     /**
      * 查询详情
+     *
      * @param params 查询参数
      * @return 详情结构
      */

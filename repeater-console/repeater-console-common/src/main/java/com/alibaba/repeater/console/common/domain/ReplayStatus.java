@@ -28,6 +28,7 @@ public enum ReplayStatus {
         this.status = status;
         this.desc = desc;
     }
+
     private static final Map<Integer, ReplayStatus> CACHED = new HashMap<>(4);
 
     static {

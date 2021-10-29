@@ -15,21 +15,21 @@ import java.util.List;
 
 public class HttpPluginTestDataProvider {
 
-    @DataProvider(name="HttpPluginTestDataProvider")
+    @DataProvider(name = "HttpPluginTestDataProvider")
     public static Object[][] getHttpPluginTestData() throws IOException {
-        List<String> dataBeans= Lists.newArrayList();
-        String dataFileName="HttpPluginRegressTestData.csv";
+        List<String> dataBeans = Lists.newArrayList();
+        String dataFileName = "HttpPluginRegressTestData.csv";
         File dataFile = FileUtil.findFileInCurrentProject(dataFileName);
         CSVParser parser = CSVUtil.parserCSV(dataFile);
-        for(CSVRecord dataRecord : parser){
-            String url=dataRecord.get("url");
-            if(! StringUtils.isBlank(url)){
+        for (CSVRecord dataRecord : parser) {
+            String url = dataRecord.get("url");
+            if (!StringUtils.isBlank(url)) {
                 dataBeans.add(url);
             }
         }
         Preconditions.checkNotNullOrEmpty(dataBeans.toArray());
-        int size=dataBeans.size();
-        Object[][] testData=new Object [size][1];
+        int size = dataBeans.size();
+        Object[][] testData = new Object[size][1];
         //填充数据集
         for (int i = 0; i < size; i++) {
             testData[i][0] = dataBeans.get(i);

@@ -29,6 +29,7 @@ public class ResultHelper {
     public static <T> RepeaterResult<T> success(String message, T t) {
         return RepeaterResult.builder().message(message).success(true).data(t).build();
     }
+
     public static <T> RepeaterResult<T> success(String message) {
         return success(message, null);
     }
