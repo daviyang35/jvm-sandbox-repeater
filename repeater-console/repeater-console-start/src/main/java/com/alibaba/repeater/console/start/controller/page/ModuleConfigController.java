@@ -112,5 +112,4 @@ public class ModuleConfigController {
     public RepeaterResult<ModuleConfigBO> pushModel(@ModelAttribute("requestParams") ModuleConfigParams params) {
         return moduleConfigService.push(params);
     }
-
 }

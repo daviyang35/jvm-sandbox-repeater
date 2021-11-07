@@ -6,6 +6,7 @@ import com.alibaba.repeater.console.common.params.ReplayParams;
 import com.alibaba.repeater.console.service.ReplayService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,6 +25,12 @@ public class ReplayController {
 
     @Resource
     private ReplayService replayService;
+
+    @GetMapping(path = "detail")
+    @ResponseBody
+    public RepeaterResult<ReplayBO> detail(@ModelAttribute("params") ReplayParams params) {
+        return replayService.query(params);
+    }
 
     @RequestMapping("detail.htm")
     public String detail(@ModelAttribute("requestParams") ReplayParams params, Model model) {

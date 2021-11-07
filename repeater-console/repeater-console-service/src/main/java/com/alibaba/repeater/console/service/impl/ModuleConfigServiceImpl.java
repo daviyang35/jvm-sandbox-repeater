@@ -53,8 +53,8 @@ public class ModuleConfigServiceImpl implements ModuleConfigService {
     public PageResult<ModuleConfigBO> list(ModuleConfigParams params) {
         PageResult<ModuleConfigBO> result = new PageResult<>();
         Page<ModuleConfig> page = moduleConfigDao.selectByParams(params);
+        result.setSuccess(true);
         if (page.hasContent()) {
-            result.setSuccess(true);
             result.setPageIndex(params.getPage());
             result.setCount(page.getTotalElements());
             result.setTotalPage(page.getTotalPages());
