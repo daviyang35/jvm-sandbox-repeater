@@ -1,7 +1,7 @@
 package com.alibaba.jvm.sandbox.repeater.plugin.core.impl.spi;
 
 import com.alibaba.jvm.sandbox.repeater.plugin.Constants;
-import com.alibaba.jvm.sandbox.repeater.plugin.core.ConfigurationInstance;
+import com.alibaba.jvm.sandbox.repeater.plugin.core.RepeaterInstance;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.eventbus.EventBusInner;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.eventbus.RepeatEvent;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.impl.api.DefaultFlowDispatcher;
@@ -56,7 +56,7 @@ public class RepeatSubscribeSupporter implements SubscribeSupporter<RepeatEvent>
             }
             log.info("subscribe success params={}", req);
             final RepeatMeta meta = SerializerWrapper.hessianDeserialize(data, RepeatMeta.class);
-            RepeaterResult<RecordModel> pr = ConfigurationInstance.instance().getBroadcaster().pullRecord(meta);
+            RepeaterResult<RecordModel> pr = RepeaterInstance.instance().getBroadcaster().pullRecord(meta);
             if (pr.isSuccess()) {
                 DefaultFlowDispatcher.instance().dispatch(meta, pr.getData());
             } else {

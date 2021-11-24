@@ -14,44 +14,19 @@ public class Constants {
     public static final String DATA_TRANSPORT_IDENTIFY = "_data";
 
     /**
-     * 控制台服务器地址
+     * 控制台服务器地址，默认值：http://localhost:8001/
      */
-    public static final String DEFAULT_CONFIG_CONSOLE = "repeat.config.console";
+    public static final String DEFAULT_CONSOLE_URL = "repeater.console.url";
 
     /**
-     * 默认数据源地址
+     * 模块心跳间隔，单位: 秒，默认值：10
      */
-    public static final String DEFAULT_REPEAT_DATASOURCE = "repeat.record.url";
+    public static final String REPEAT_HEARTBEAT_INTERVAL = "repeater.console.heartbeat";
 
     /**
-     * 默认配置拉取地址
+     * 是否开启spring advice的拦截，默认值：false
      */
-    public static final String DEFAULT_CONFIG_DATASOURCE = "repeat.config.url";
-
-    /**
-     * 默认回放消息投递地址
-     */
-    public static final String DEFAULT_REPEAT_BROADCASTER = "broadcaster.repeat.url";
-
-    /**
-     * 默认录制消息投递地址
-     */
-    public static final String DEFAULT_RECORD_BROADCASTER = "broadcaster.record.url";
-
-    /**
-     * 是否开启spring advice的拦截
-     */
-    public static final String REPEAT_SPRING_ADVICE_SWITCH = "repeat.spring.advice.switch";
-
-    /**
-     * 模块心跳地址
-     */
-    public static final String REPEAT_HEARTBEAT_URL = "repeat.heartbeat.url";
-
-    /**
-     * 模块心跳间隔，单位: 秒
-     */
-    public static final String REPEAT_HEARTBEAT_INTERVAL = "repeat.heartbeat.interval";
+    public static final String REPEAT_SPRING_ADVICE_ENABLE = "repeater.spring.advice.enable";
 
     /**
      * 插件自有类正则

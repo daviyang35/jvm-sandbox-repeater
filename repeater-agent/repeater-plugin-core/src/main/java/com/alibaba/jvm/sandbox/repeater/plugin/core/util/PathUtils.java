@@ -11,17 +11,17 @@ import java.lang.reflect.Field;
  * repeater插件目录如下；如果使用默认路径，可以通过repeater-module.jar定位到 plugins & cfg 的位置
  * <p>
  * <p>
- * ├── cfg
- * │   ├── repeater-logback.xml
- * │   └── repeater.properties
- * ├── plugins
- * │   ├── dubbo-plugin.jar
- * │   ├── http-plugin.jar
- * │   ├── ibatis-plugin.jar
- * │   ├── java-plugin.jar
- * │   └── mybatis-plugin.jar
- * ├── repeater-bootstrap.jar
- * └── repeater-module.jar
+ * ├── cfg<br/>
+ * │   ├── repeater-logback.xml<br/>
+ * │   └── repeater.properties<br/>
+ * ├── plugins<br/>
+ * │   ├── dubbo-plugin.jar<br/>
+ * │   ├── http-plugin.jar<br/>
+ * │   ├── ibatis-plugin.jar<br/>
+ * │   ├── java-plugin.jar<br/>
+ * │   └── mybatis-plugin.jar<br/>
+ * ├── repeater-bootstrap.jar<br/>
+ * └── repeater-module.jar<br/>
  * </p>
  *
  * @author zhaoyb1990

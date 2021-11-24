@@ -11,7 +11,7 @@ import com.alibaba.jvm.sandbox.repater.plugin.http.wrapper.WrapperTransModel;
 import com.alibaba.jvm.sandbox.repeater.plugin.Constants;
 import com.alibaba.jvm.sandbox.repeater.plugin.api.InvocationListener;
 import com.alibaba.jvm.sandbox.repeater.plugin.api.InvocationProcessor;
-import com.alibaba.jvm.sandbox.repeater.plugin.core.ConfigurationInstance;
+import com.alibaba.jvm.sandbox.repeater.plugin.core.RepeaterInstance;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.bridge.ClassloaderBridge;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.cache.RecordCache;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.cache.RepeatCache;
@@ -77,7 +77,7 @@ public class HttpStandaloneListener extends DefaultEventListener implements Invo
                     meta.setMatchPercentage(100);
                     meta.setStrategyType(MockStrategy.StrategyType.PARAMETER_MATCH);
                     meta.setRepeatId(traceIdX);
-                    RepeaterResult<RecordModel> pr = ConfigurationInstance.instance().getBroadcaster().pullRecord(meta);
+                    RepeaterResult<RecordModel> pr = RepeaterInstance.instance().getBroadcaster().pullRecord(meta);
                     if (pr.isSuccess()) {
                         Tracer.start();
                         RepeatContext context = new RepeatContext(meta, pr.getData(), Tracer.getTraceId());

@@ -1,12 +1,11 @@
 package com.alibaba.jvm.sandbox.repeater.plugin.core.impl.api;
 
-import com.alibaba.jvm.sandbox.repeater.plugin.Constants;
+import com.alibaba.jvm.sandbox.repeater.plugin.api.ConsoleManager;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.impl.AbstractBroadcaster;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.serialize.SerializeException;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.util.HttpUtil;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.util.HttpUtil.Resp;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.util.JSONUtil;
-import com.alibaba.jvm.sandbox.repeater.plugin.core.util.PropertyUtil;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.wrapper.RecordWrapper;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.wrapper.SerializerWrapper;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.*;
@@ -26,36 +25,11 @@ import java.util.HashMap;
 @Slf4j
 public class DefaultBroadcaster extends AbstractBroadcaster {
 
-    /**
-     * 录制消息投递的URL
-     */
-    private String broadcastRecordUrl = PropertyUtil.getPropertyOrDefault(Constants.DEFAULT_RECORD_BROADCASTER, "");
+    private final ConsoleManager consoleManager;
 
-    /**
-     * 回放消息投递URL
-     */
-    private String broadcastRepeatUrl = PropertyUtil.getPropertyOrDefault(Constants.DEFAULT_REPEAT_BROADCASTER, "");
-
-    /**
-     * 回放消息拉取URL
-     */
-    private String pullRecordUrl = PropertyUtil.getPropertyOrDefault(Constants.DEFAULT_REPEAT_DATASOURCE, "");
-
-
-    public void setBroadcastRecordUrl(String broadcastRecordUrl) {
-        this.broadcastRecordUrl = broadcastRecordUrl;
-    }
-
-    public void setBroadcastRepeatUrl(String broadcastRepeatUrl) {
-        this.broadcastRepeatUrl = broadcastRepeatUrl;
-    }
-
-    public String getPullRecordUrl() {
-        return pullRecordUrl;
-    }
-
-    public DefaultBroadcaster() {
+    public DefaultBroadcaster(ConsoleManager consoleManager) {
         super();
+        this.consoleManager = consoleManager;
     }
 
     @Override
@@ -63,7 +37,7 @@ public class DefaultBroadcaster extends AbstractBroadcaster {
         try {
             RecordWrapper wrapper = new RecordWrapper(recordModel);
             String body = SerializerWrapper.hessianSerialize(wrapper);
-            broadcast(broadcastRecordUrl, body, recordModel.getTraceId());
+            broadcast(consoleManager.postRecordUrl(), body, recordModel.getTraceId());
         } catch (SerializeException e) {
             log.error("broadcast record failed", e);
         } catch (Throwable throwable) {
@@ -75,7 +49,7 @@ public class DefaultBroadcaster extends AbstractBroadcaster {
     protected void broadcastRepeat(RepeatModel record) {
         try {
             String body = SerializerWrapper.hessianSerialize(record);
-            broadcast(broadcastRepeatUrl, body, record.getTraceId());
+            broadcast(consoleManager.postRepeatUrl(), body, record.getTraceId());
         } catch (SerializeException e) {
             log.error("broadcast record failed", e);
         } catch (Throwable throwable) {
@@ -105,7 +79,7 @@ public class DefaultBroadcaster extends AbstractBroadcaster {
     public RepeaterResult<RecordModel> pullRecord(RepeatMeta meta) {
         String url;
         if (StringUtils.isEmpty(meta.getDatasource())) {
-            url = String.format(pullRecordUrl, meta.getAppName(), meta.getTraceId());
+            url = consoleManager.fetchRecordUrl(meta.getAppName(), meta.getTraceId());
         } else {
             url = meta.getDatasource();
         }

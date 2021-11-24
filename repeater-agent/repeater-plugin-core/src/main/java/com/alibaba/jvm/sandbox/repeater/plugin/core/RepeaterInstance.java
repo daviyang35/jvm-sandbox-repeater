@@ -8,13 +8,13 @@ import com.alibaba.jvm.sandbox.repeater.plugin.core.impl.api.DefaultConfigManage
 import com.alibaba.jvm.sandbox.repeater.plugin.core.impl.api.DefaultConsoleManager;
 
 /**
- * {@link ConfigurationInstance} 配置单例
+ * {@link RepeaterInstance} 配置单例
  *
  * @author daviyang35
  */
-public class ConfigurationInstance {
+public class RepeaterInstance {
 
-    private static ConfigurationInstance instance = new ConfigurationInstance();
+    private static RepeaterInstance instance = new RepeaterInstance();
 
     private ConfigManager configManager;
 
@@ -22,14 +22,14 @@ public class ConfigurationInstance {
 
     private ConsoleManager consoleManager;
 
-    public static ConfigurationInstance instance() {
+    public static RepeaterInstance instance() {
         return instance;
     }
 
-    private ConfigurationInstance() {
-        configManager = new DefaultConfigManager();
-        broadcaster = new DefaultBroadcaster();
+    private RepeaterInstance() {
         consoleManager = new DefaultConsoleManager();
+        configManager = new DefaultConfigManager(consoleManager);
+        broadcaster = new DefaultBroadcaster(consoleManager);
     }
 
     public ConfigManager getConfigManager() {
@@ -42,6 +42,10 @@ public class ConfigurationInstance {
 
     public ConsoleManager getConsoleManager() {
         return consoleManager;
+    }
+
+    public String postHeartbeatUrl() {
+        return instance().getConsoleManager().postHeartbeatUrl();
     }
 }
 

@@ -3,6 +3,7 @@ package com.alibaba.jvm.sandbox.repeater.module;
 import com.alibaba.jvm.sandbox.api.ModuleException;
 import com.alibaba.jvm.sandbox.api.resource.ConfigInfo;
 import com.alibaba.jvm.sandbox.api.resource.ModuleManager;
+import com.alibaba.jvm.sandbox.repeater.plugin.core.RepeaterInstance;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.model.ApplicationModel;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.util.HttpUtil;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.util.PropertyUtil;
@@ -17,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.alibaba.jvm.sandbox.repeater.plugin.Constants.REPEAT_HEARTBEAT_INTERVAL;
-import static com.alibaba.jvm.sandbox.repeater.plugin.Constants.REPEAT_HEARTBEAT_URL;
 
 /**
  * {@link HeartbeatHandler}
@@ -27,9 +27,8 @@ import static com.alibaba.jvm.sandbox.repeater.plugin.Constants.REPEAT_HEARTBEAT
  */
 @Slf4j
 public class HeartbeatHandler {
-    private final static String HEARTBEAT_DOMAIN = PropertyUtil.getPropertyOrDefault(REPEAT_HEARTBEAT_URL, "");
-    private final static String HEARTBEAT_INTERVAL = PropertyUtil.getPropertyOrDefault(REPEAT_HEARTBEAT_INTERVAL, "10");
-
+    private final Long FREQUENCY = Long.parseLong(PropertyUtil.getPropertyOrDefault(REPEAT_HEARTBEAT_INTERVAL, "10"));
+    private String heartbeatUrl;
     private static ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
             new BasicThreadFactory.Builder().namingPattern("heartbeat-pool-%d").daemon(true).build());
 
@@ -44,7 +43,6 @@ public class HeartbeatHandler {
 
     public synchronized void start() {
         if (initialize.compareAndSet(false, true)) {
-            final Long FREQUENCY = Long.parseLong(HEARTBEAT_INTERVAL);
             executorService.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
@@ -56,6 +54,8 @@ public class HeartbeatHandler {
                 }
             }, 0, FREQUENCY, TimeUnit.SECONDS);
         }
+        heartbeatUrl = RepeaterInstance.instance().postHeartbeatUrl();
+        log.debug("Module heartbeat report to {} with {} seconds interval", heartbeatUrl, FREQUENCY);
     }
 
     public void stop() {
@@ -76,6 +76,7 @@ public class HeartbeatHandler {
         } catch (ModuleException e) {
             // ignore
         }
-        HttpUtil.doGet(HEARTBEAT_DOMAIN, params);
+
+        HttpUtil.doGet(heartbeatUrl, params);
     }
 }

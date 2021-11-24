@@ -1,14 +1,14 @@
 package com.alibaba.jvm.sandbox.repeater.plugin.core.impl.api;
 
-import com.alibaba.jvm.sandbox.repeater.plugin.Constants;
 import com.alibaba.jvm.sandbox.repeater.plugin.api.ConfigManager;
+import com.alibaba.jvm.sandbox.repeater.plugin.api.ConsoleManager;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.model.ApplicationModel;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.util.HttpUtil;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.util.JSONUtil;
-import com.alibaba.jvm.sandbox.repeater.plugin.core.util.PropertyUtil;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.RepeaterConfig;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.RepeaterResult;
 import com.fasterxml.jackson.core.type.TypeReference;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * {@link DefaultConfigManager} http数据拉取
@@ -16,17 +16,25 @@ import com.fasterxml.jackson.core.type.TypeReference;
  *
  * @author zhaoyb1990
  */
+@Slf4j
 public class DefaultConfigManager implements ConfigManager {
 
-    private final static String DEFAULT_CONFIG_URL = PropertyUtil.getPropertyOrDefault(Constants.DEFAULT_CONFIG_DATASOURCE, "");
+    private final ConsoleManager consoleManager;
+
+    public DefaultConfigManager(ConsoleManager consoleManager) {
+        this.consoleManager = consoleManager;
+    }
 
     @Override
     public RepeaterResult<RepeaterConfig> pullConfig() {
-        int retryTime = 100;
+        int retryTime = 5;
         HttpUtil.Resp resp = null;
         while (--retryTime > 0) {
-            resp = HttpUtil.doGet(String.format(DEFAULT_CONFIG_URL, ApplicationModel.instance().getAppName(),
-                    ApplicationModel.instance().getEnvironment()));
+            final String fetchConfigUrl = consoleManager.fetchConfigUrl(
+                    ApplicationModel.instance().getAppName(),
+                    ApplicationModel.instance().getEnvironment());
+            log.debug("fetchConfigUrl:{}", fetchConfigUrl);
+            resp = HttpUtil.doGet(fetchConfigUrl);
             if (resp.isSuccess()) {
                 break;
             }

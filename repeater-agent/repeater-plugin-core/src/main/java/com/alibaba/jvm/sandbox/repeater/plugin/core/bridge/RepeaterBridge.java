@@ -28,7 +28,7 @@ public class RepeaterBridge {
         if (rs == null || rs.isEmpty()) {
             return;
         }
-        // reset repeat'er container
+        // reset repeater container
         cached.clear();
         for (Repeater repeater : rs) {
             cached.put(repeater.getType(), repeater);

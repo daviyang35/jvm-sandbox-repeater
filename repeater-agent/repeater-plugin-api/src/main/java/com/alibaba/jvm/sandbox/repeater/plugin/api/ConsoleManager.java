@@ -7,5 +7,15 @@ package com.alibaba.jvm.sandbox.repeater.plugin.api;
  * @author daviyang35
  */
 public interface ConsoleManager {
-    String configDataSourceURL();
+    String consoleUrl();
+
+    String postRecordUrl();
+
+    String postRepeatUrl();
+
+    String fetchRecordUrl(String appName, String traceId);
+
+    String fetchConfigUrl(String appName, String appEnvironment);
+
+    String postHeartbeatUrl();
 }

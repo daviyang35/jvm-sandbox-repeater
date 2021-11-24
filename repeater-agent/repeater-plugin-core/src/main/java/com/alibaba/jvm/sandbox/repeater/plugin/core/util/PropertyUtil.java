@@ -2,7 +2,6 @@ package com.alibaba.jvm.sandbox.repeater.plugin.core.util;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
@@ -31,7 +30,7 @@ public class PropertyUtil {
 
     static {
         try {
-            InputStream is = new FileInputStream(new File(PathUtils.getConfigPath() + "/repeater.properties"));
+            InputStream is = new FileInputStream(PathUtils.getConfigPath() + "/repeater.properties");
             properties.load(is);
         } catch (Exception e) {
             // cause this class will be load in repeater console, use this hard code mode to solve compatibility problem.

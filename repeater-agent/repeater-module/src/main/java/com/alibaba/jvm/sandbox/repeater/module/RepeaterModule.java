@@ -17,7 +17,7 @@ import com.alibaba.jvm.sandbox.repeater.plugin.api.Broadcaster;
 import com.alibaba.jvm.sandbox.repeater.plugin.api.ConfigManager;
 import com.alibaba.jvm.sandbox.repeater.plugin.api.InvocationListener;
 import com.alibaba.jvm.sandbox.repeater.plugin.api.LifecycleManager;
-import com.alibaba.jvm.sandbox.repeater.plugin.core.ConfigurationInstance;
+import com.alibaba.jvm.sandbox.repeater.plugin.core.RepeaterInstance;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.bridge.ClassloaderBridge;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.bridge.RepeaterBridge;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.eventbus.EventBusInner;
@@ -51,7 +51,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.alibaba.jvm.sandbox.repeater.plugin.Constants.REPEAT_SPRING_ADVICE_SWITCH;
+import static com.alibaba.jvm.sandbox.repeater.plugin.Constants.REPEAT_SPRING_ADVICE_ENABLE;
 
 /**
  * <p>
@@ -99,7 +99,7 @@ public class RepeaterModule implements Module, ModuleLifecycle {
         Mode mode = configInfo.getMode();
         log.info("module on loaded,id={},version={},mode={}", com.alibaba.jvm.sandbox.repeater.module.Constants.MODULE_ID, com.alibaba.jvm.sandbox.repeater.module.Constants.VERSION, mode);
         /* agent方式启动 */
-        if (mode == Mode.AGENT && Boolean.parseBoolean(PropertyUtil.getPropertyOrDefault(REPEAT_SPRING_ADVICE_SWITCH, ""))) {
+        if (mode == Mode.AGENT && Boolean.parseBoolean(PropertyUtil.getPropertyOrDefault(REPEAT_SPRING_ADVICE_ENABLE, "false"))) {
             log.info("agent launch mode,use Spring Instantiate Advice to register bean.");
             SpringContextInnerContainer.setAgentLaunch(true);
             SpringInstantiateAdvice.watcher(this.eventWatcher).watch();
@@ -130,8 +130,8 @@ public class RepeaterModule implements Module, ModuleLifecycle {
         ExecutorInner.execute(new Runnable() {
             @Override
             public void run() {
-                configManager = ConfigurationInstance.instance().getConfigManager();
-                broadcaster = ConfigurationInstance.instance().getBroadcaster();
+                configManager = RepeaterInstance.instance().getConfigManager();
+                broadcaster = RepeaterInstance.instance().getBroadcaster();
                 invocationListener = new DefaultInvocationListener(broadcaster);
                 RepeaterResult<RepeaterConfig> pr = configManager.pullConfig();
                 if (pr.isSuccess()) {
