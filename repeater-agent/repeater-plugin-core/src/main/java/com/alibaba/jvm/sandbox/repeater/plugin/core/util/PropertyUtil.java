@@ -48,7 +48,16 @@ public class PropertyUtil {
      * @return 属性值 or 默认值
      */
     public static String getPropertyOrDefault(String key, String defaultValue) {
+        final String envProperty = System.getenv(getPropertyEnvKey(key));
+        if (envProperty != null) {
+            return envProperty;
+        }
+
         String property = properties.getProperty(key);
         return StringUtils.isEmpty(property) ? defaultValue : property;
+    }
+
+    private static String getPropertyEnvKey(String key) {
+        return key.replaceAll("[.]", "_").toUpperCase();
     }
 }
