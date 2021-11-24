@@ -5,7 +5,7 @@
     <parent>
         <artifactId>repeater-console</artifactId>
         <groupId>com.alibaba.jvm.sandbox</groupId>
-        <version>1.1.0</version>
+        <version>1.1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
