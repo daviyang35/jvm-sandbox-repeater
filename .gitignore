@@ -6,3 +6,4 @@ bin/
 deploy/
 Dockerfile.*
 /jvm-sandbox-console.tar
+dist/

@@ -57,7 +57,7 @@ public class RecordServiceImpl implements RecordService {
     public RepeaterResult<String> get(String appName, String traceId) {
         Record record = recordDao.selectByAppNameAndTraceId(appName, traceId);
         if (record == null) {
-            return RepeaterResult.builder().success(false).message("data not exits").build();
+            return RepeaterResult.builder().success(false).message("data not exits appName(" + appName + ") traceId(" + traceId + ")").build();
         }
         return RepeaterResult.builder().success(true).message("operate success").data(record.getWrapperRecord()).build();
     }
@@ -66,14 +66,12 @@ public class RecordServiceImpl implements RecordService {
     public PageResult<RecordBO> query(RecordParams params) {
         Page<Record> page = recordDao.selectByAppNameOrTraceId(params);
         PageResult<RecordBO> result = new PageResult<>();
-        if (page.hasContent()) {
-            result.setSuccess(true);
-            result.setCount(page.getTotalElements());
-            result.setTotalPage(page.getTotalPages());
-            result.setPageIndex(params.getPage());
-            result.setPageSize(params.getSize());
-            result.setData(page.getContent().stream().map(recordConverter::convert).collect(Collectors.toList()));
-        }
+        result.setSuccess(true);
+        result.setCount(page.getTotalElements());
+        result.setTotalPage(page.getTotalPages());
+        result.setPageIndex(page.getNumber());
+        result.setPageSize(page.getSize());
+        result.setData(page.getContent().stream().map(recordConverter::convert).collect(Collectors.toList()));
         return result;
     }
 

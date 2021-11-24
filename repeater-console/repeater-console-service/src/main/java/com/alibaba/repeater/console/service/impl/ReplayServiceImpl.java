@@ -13,8 +13,10 @@ import com.alibaba.jvm.sandbox.repeater.plugin.domain.RepeatModel;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.RepeaterResult;
 import com.alibaba.jvm.sandbox.repeater.plugin.spi.MockStrategy;
 import com.alibaba.repeater.console.common.domain.ModuleInfoBO;
+import com.alibaba.repeater.console.common.domain.PageResult;
 import com.alibaba.repeater.console.common.domain.ReplayBO;
 import com.alibaba.repeater.console.common.domain.ReplayStatus;
+import com.alibaba.repeater.console.common.params.BaseParams;
 import com.alibaba.repeater.console.common.params.ReplayParams;
 import com.alibaba.repeater.console.dal.dao.RecordDao;
 import com.alibaba.repeater.console.dal.dao.ReplayDao;
@@ -30,10 +32,11 @@ import com.alibaba.repeater.console.service.util.ResultHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -68,7 +71,8 @@ public class ReplayServiceImpl implements ReplayService {
         Optional.ofNullable(params.getIp()).orElseThrow(() -> new RuntimeException("ip can not be null"));
         Optional.ofNullable(params.getAppName()).orElseThrow(() -> new RuntimeException("appName can not be null"));
         Optional.ofNullable(params.getTraceId()).orElseThrow(() -> new RuntimeException("traceId can not be null"));
-        RepeaterResult<ModuleInfoBO> result = moduleInfoService.query(params.getAppName(), params.getIp());
+
+        RepeaterResult<ModuleInfoBO> result = moduleInfoService.query(params.getAppName(), params.getEnvironment());
         if (!result.isSuccess() || result.getData() == null) {
             return ResultHelper.copy(result);
         }
@@ -140,7 +144,7 @@ public class ReplayServiceImpl implements ReplayService {
             log.error("error occurred serialize diff result", e);
             return RepeaterResult.builder().message("operate failed").build();
         }
-        Replay calllback = replayDao.saveAndFlush(replay);
+        replayDao.saveAndFlush(replay);
         return RepeaterResult.builder().success(true).message("operate success").data("-/-").build();
     }
 
@@ -180,10 +184,24 @@ public class ReplayServiceImpl implements ReplayService {
         replay.setEnvironment(params.getEnvironment());
         replay.setIp(params.getIp());
         replay.setRepeatId(params.getRepeatId());
-        replay.setGmtCreate(new Date());
-        replay.setGmtModified(new Date());
+        final LocalDateTime date = LocalDateTime.now();
+        replay.setGmtCreate(date);
+        replay.setGmtModified(date);
         replay.setStatus(ReplayStatus.PROCESSING.getStatus());
         // 冗余了一个repeatID，实际可以直接使用replay#id
         return replayDao.save(replay);
+    }
+
+    @Override
+    public PageResult<ReplayBO> list(BaseParams params) {
+        PageResult<ReplayBO> result = new PageResult<>();
+        final Page<Replay> page = replayDao.selectByParams(params);
+        result.setSuccess(true);
+        result.setPageIndex(page.getNumber());
+        result.setCount(page.getTotalElements());
+        result.setPageSize(page.getSize());
+        result.setTotalPage(page.getTotalPages());
+        result.setData(page.getContent().stream().map(replayConverter::convert).collect(Collectors.toList()));
+        return result;
     }
 }

@@ -1,12 +1,14 @@
 package com.alibaba.repeater.console.service.util;
 
 import com.alibaba.jvm.sandbox.repeater.plugin.core.serialize.SerializeException;
-import com.alibaba.repeater.console.service.serialize.CustomJavaTimeModule;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -23,17 +25,27 @@ import java.util.TimeZone;
  */
 public class JacksonUtil {
 
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static ObjectMapper mapper;
 
     static {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+        mapper = new ObjectMapper();
+        mapper.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
+        mapper.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
+        mapper.enable(JsonParser.Feature.ALLOW_TRAILING_COMMA);
+
+        mapper.enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
+
+        mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+
         mapper.setLocale(Locale.getDefault())
                 .setTimeZone(TimeZone.getTimeZone(ZoneId.systemDefault()))
-                .setDateFormat(sdf);
-        mapper.registerModule(new CustomJavaTimeModule());
+                .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        mapper.registerModule(new JavaTimeModule());
     }
 
     public static String serialize(Object object) throws SerializeException {

@@ -41,7 +41,8 @@ curl -s 'http://127.0.0.1:8001/regress/slogan?Repeat-TraceId-X=12700000000115603
 
 > 无论我们多少次访问这个地址，都将返回Repeat-TraceId=127000000001156034386424510000ed绑定的录制信息`JAVA是世界上最好的语言!`；如果重新访问[Slogan](http://127.0.0.1:8001/regress/slogan?Repeat-TraceId=127000000001156034386424510000ed)后又会将最新的返回结果绑定到Repeat-TraceId=127000000001156034386424510000ed（为了快速演示，将链路追踪的标志提到参数中进行透传了）
 
-[RegressController](/repeater-console/repeater-console-start/src/main/java/com/alibaba/repeater/console/start/controller/RegressController.java)中提供了更多的测试用例，包括异步servlet、多线程调用、复杂结构返回对象，可以根据slogan类似的方式进行测试。
+[RegressController](/repeater-console/repeater-console-bootstrap/src/main/java/com/alibaba/repeater/console/start/controller/RegressController.java)
+中提供了更多的测试用例，包括异步servlet、多线程调用、复杂结构返回对象，可以根据slogan类似的方式进行测试。
 
 > 简单揭秘：`/regress/slogan`接口调用了`RegressServiceImpl#slogan`方法
 
@@ -144,7 +145,7 @@ params		: _data
 ```
 
 > 其中 port 是jvm-sandbox启动时候绑定的port，可以在attach sandbox时增加`-P 12580`指定，或者执行`~/sandbox/bin/sandbox.sh -p {pid} -v` 查看`SERVER_PORT`
-> _data 是由[RepeatMeta](/repeater-plugin-api/src/main/java/com/alibaba/jvm/sandbox/repeater/plugin/domain/RepeatMeta.java)经过hessian序列化之后的值，具体调用方式参见[AbstractRecordService](/repeater-console/repeater-console-service/src/main/java/com/alibaba/repeater/console/service/impl/AbstractRecordService.java) 和[RecordFacadeApi](/repeater-console/repeater-console-start/src/main/java/com/alibaba/repeater/console/start/controller/RecordFacadeApi.java)
+> _data 是由[RepeatMeta](/repeater-plugin-api/src/main/java/com/alibaba/jvm/sandbox/repeater/plugin/domain/RepeatMeta.java)经过hessian序列化之后的值，具体调用方式参见[AbstractRecordService](/repeater-console/repeater-console-service/src/main/java/com/alibaba/repeater/console/service/impl/AbstractRecordService.java) 和[RecordFacadeApi](/repeater-console/repeater-console-bootstrap/src/main/java/com/alibaba/repeater/console/start/controller/RecordFacadeApi.java)
 
 #### 方式二：利用模块暴露的http接口(JSON)发起回放
 

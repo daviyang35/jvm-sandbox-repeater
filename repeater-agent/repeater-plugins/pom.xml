@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>repeater-agent</artifactId>
+        <groupId>com.alibaba.jvm.sandbox</groupId>
+        <version>1.1.0</version>
+    </parent>
+    <artifactId>repeater-plugins</artifactId>
+    <packaging>pom</packaging>
+    <name>repeater-agent::plugins</name>
+
+    <modules>
+        <module>mybatis-plugin</module>
+        <module>ibatis-plugin</module>
+        <module>java-plugin</module>
+        <module>http-plugin</module>
+        <module>dubbo-plugin</module>
+        <module>redis-plugin</module>
+        <module>hibernate-plugin</module>
+        <module>jpa-plugin</module>
+        <module>socketio-plugin</module>
+        <module>apache-http-client-plugin</module>
+        <module>caffeine-cache-plugin</module>
+        <module>eh-cache-plugin</module>
+        <module>guava-cache-plugin</module>
+        <module>okhttp-plugin</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.alibaba.jvm.sandbox</groupId>
+            <artifactId>sandbox-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.jvm.sandbox</groupId>
+            <artifactId>repeater-plugin-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+    </build>
+</project>

@@ -1,7 +1,7 @@
 package com.alibaba.repeater.console.service.convert;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.jvm.sandbox.repeater.aide.compare.Difference;
+import com.alibaba.jvm.sandbox.repeater.plugin.core.util.JSONUtil;
 import com.alibaba.repeater.console.common.domain.DifferenceBO;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +19,8 @@ public class DifferenceConvert implements ModelConverter<Difference, DifferenceB
         DifferenceBO bo = new DifferenceBO();
         bo.setNodeName(source.getNodeName());
         bo.setType(source.getType().getReason());
-        bo.setActual(JSON.toJSONString(source.getLeft()));
-        bo.setExpect(JSON.toJSONString(source.getRight()));
+        bo.setActual(JSONUtil.toJSONString(source.getLeft()));
+        bo.setExpect(JSONUtil.toJSONString(source.getRight()));
         return bo;
     }
 

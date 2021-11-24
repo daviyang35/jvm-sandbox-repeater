@@ -1,7 +1,9 @@
 package com.alibaba.repeater.console.service;
 
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.RepeaterResult;
+import com.alibaba.repeater.console.common.domain.PageResult;
 import com.alibaba.repeater.console.common.domain.ReplayBO;
+import com.alibaba.repeater.console.common.params.BaseParams;
 import com.alibaba.repeater.console.common.params.ReplayParams;
 
 /**
@@ -17,4 +19,6 @@ public interface ReplayService {
     RepeaterResult<String> saveRepeat(String body);
 
     RepeaterResult<ReplayBO> query(ReplayParams params);
+
+    PageResult<ReplayBO> list(BaseParams params);
 }

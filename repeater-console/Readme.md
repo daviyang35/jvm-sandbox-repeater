@@ -10,13 +10,5 @@ curl -s http://127.0.0.1:8001/facade/api/repeat/callback/03001008321215603438642
 ```
 
 
-> console临时采用[AdminLTE](https://github.com/ColorlibHQ/AdminLTE) + Velocity来写页面，后续找一批有兴趣的同学一起基于[ant-design](https://github.com/ant-design/ant-design)或者[ice](https://github.com/alibaba/ice)进行重构
+> console ui [repeater-web](https://github.com/daviyang35/repeater-web) 
 
-
-### 引用开源框架
-
-- [AdminLTE](https://github.com/ColorlibHQ/AdminLTE)
-- [jquery](https://github.com/jquery/jquery)
-- [ace](https://github.com/ajaxorg/ace/)
-- [ace-diff](https://github.com/ace-diff/ace-diff)
-- [bootstrap](https://github.com/twbs/bootstrap)

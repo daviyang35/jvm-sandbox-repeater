@@ -21,13 +21,10 @@ else
     kill -9 ${PID}
 fi
 
-if [ ! -f "${HOME}/.sandbox-module/repeater-bootstrap.jar" ]; then
-    echo "repeater-bootstrap.jar not found, try to install";
-    sh ./install-local.sh || exit_on_err 1 "install repeater failed"
-fi
+#if [ ! -f "${HOME}/.sandbox-module/repeater-bootstrap.jar" ]; then
+#    echo "repeater-bootstrap.jar not found, try to install";
+#    sh ./install-local.sh || exit_on_err 1 "install repeater failed"
+#fi
 
-${JAVA_HOME}/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000 \
-     -javaagent:${HOME}/sandbox/lib/sandbox-agent.jar=server.port=8820\;server.ip=0.0.0.0 \
-     -Dapp.name=repeater \
-     -Dapp.env=daily \
-     -jar ${HOME}/.sandbox-module/repeater-bootstrap.jar
+java -javaagent:${HOME}/sandbox/lib/sandbox-agent.jar=server.port=8820\;server.ip=0.0.0.0 -Dapp.name=repeater -Dapp.env=daily \
+     -jar ../dist/repeater-bootstrap.jar

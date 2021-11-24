@@ -15,7 +15,8 @@
 - 不想写接口测试脚本了，我想做一个流量录制系统，把线上用户场景做业务回归，可能会接入很多服务系统，不想让每个系统都进行改造，有好的框架选择吗？
 - 我想做一个业务监控系统，对线上核心接口采样之后做一些业务校验，实时监控业务正确性。
 
-如果你有以上的想法或需求，[jvm-sandbox-repeater](https://github.com/alibaba/jvm-sandbox-repeater) 都将是你的不二选择方案；框架基于JVM-Sandbox，拥有JVM-Sandbox的一切特性，同时封装了以下能力：
+如果你有以上的想法或需求，[jvm-sandbox-repeater](https://github.com/alibaba/jvm-sandbox-repeater)
+都将是你的不二选择方案；框架基于JVM-Sandbox，拥有JVM-Sandbox的一切特性，同时封装了以下能力：
 
 - 录制/回放基础协议，可快速配置/编码实现一类中间件的录制/回放
 - 开放数据上报，对于录制结果可上报到自己的服务端，进行监控、回归、问题排查等上层平台搭建
@@ -62,14 +63,18 @@
 
 ### 流量录制
 
-对于Java调用，一次流量录制包括一次入口调用(`entranceInvocation`)（eg：HTTP/Dubbo/Java）和若干次子调用(`subInvocations`)。流量的录制过程就是把入口调用和子调用绑定成一次完整的记录，框架抽象了基础录制协议，调用的组装由调用插件([InvokePlugin](/repeater-plugin-api/src/main/java/com/alibaba/jvm/sandbox/repeater/plugin/spi/InvokePlugin.java))来完成，需要考虑解决的核心问题：
+对于Java调用，一次流量录制包括一次入口调用(`entranceInvocation`)（eg：HTTP/Dubbo/Java）和若干次子调用(`subInvocations`)
+。流量的录制过程就是把入口调用和子调用绑定成一次完整的记录，框架抽象了基础录制协议，调用的组装由调用插件([InvokePlugin](/repeater-plugin-api/src/main/java/com/alibaba/jvm/sandbox/repeater/plugin/spi/InvokePlugin.java))
+来完成，需要考虑解决的核心问题：
 
 - 快速开发和适配新插件
 - 绑定入口调用和子调用（解决多线程上下文传递问题）
 - `invocation`唯一定位，保障回放时精确匹配
 - 自定义流量采样、过滤、发送、存储
 
-框架的核心逻辑录制协议基于JVM-Sandbox的`BEFORE`、`RETRUN`、`THROW`事件机制进行录制流程控制，详见[DefaultEventListener](/repeater-plugin-core/src/main/java/com/alibaba/jvm/sandbox/repeater/plugin/core/impl/api/DefaultEventListener.java)：
+框架的核心逻辑录制协议基于JVM-Sandbox的`BEFORE`、`RETRUN`、`THROW`
+事件机制进行录制流程控制，详见[DefaultEventListener](/repeater-plugin-core/src/main/java/com/alibaba/jvm/sandbox/repeater/plugin/core/impl/api/DefaultEventListener.java)
+：
 
 > 基于[TTL](https://github.com/alibaba/transmittable-thread-local)解决跨线程上下文传递问题，开启`RepeaterConfig.useTtl`之后支持多线程子调用录制
 >
@@ -80,8 +85,8 @@
 > 基于[Tracer](/repeater-plugin-core/src/main/java/com/alibaba/jvm/sandbox/repeater/plugin/core/trace/Tracer.java)实现应用内链路追踪、采样；同时支持多种过滤方式，插件可自由扩展；
 
 ```java
-public void onEvent(Event event) throws Throwable {
-    try {
+public void onEvent(Event event)throws Throwable{
+        try{
         /*
          * event过滤；针对单个listener，只处理top的事件
          */
@@ -105,20 +110,20 @@ public void onEvent(Event event) throws Throwable {
         /*
          * 分发事件处理
          */
-    } catch (ProcessControlException pe) {
+        }catch(ProcessControlException pe){
         /*
          * sandbox流程干预
          */
-    } catch (Throwable throwable) {
-    	 /*
-    	  * 统计异常
-    	  */
-    } finally {
+        }catch(Throwable throwable){
+        /*
+         * 统计异常
+         */
+        }finally{
         /*
          * 清理上下文
          */
-    }
-}
+        }
+        }
 
 ```
 
@@ -131,51 +136,53 @@ public void onEvent(Event event) throws Throwable {
 - 自定义mock/非mock回放、回放策略
 - 开放回放流程关键节点hook
 
-回放过程通过异步EventBus方式订阅回放请求；基于[FlowDispather](/repeater-plugin-api/src/main/java/com/alibaba/jvm/sandbox/repeater/plugin/api/FlowDispatcher.java)进行回放流量分发，每个类型回放插件实现[Repeater](/repeater-plugin-api/src/main/java/com/alibaba/jvm/sandbox/repeater/plugin/spi/Repeater.java)SPI完成回放请求发起；每次回放请求可决定本地回放是否mock，插件也自由实现mock逻辑，mock流程代码
+回放过程通过异步EventBus方式订阅回放请求；基于[FlowDispather](/repeater-plugin-api/src/main/java/com/alibaba/jvm/sandbox/repeater/plugin/api/FlowDispatcher.java)
+进行回放流量分发，每个类型回放插件实现[Repeater](/repeater-plugin-api/src/main/java/com/alibaba/jvm/sandbox/repeater/plugin/spi/Repeater.java)
+SPI完成回放请求发起；每次回放请求可决定本地回放是否mock，插件也自由实现mock逻辑，mock流程代码
 
 > mock回放：回放流量子调用（eg:mybatis/dubbo)不发生真实调用，从录制子调用中根据 [MockStrategy](/repeater-plugin-api/src/main/java/com/alibaba/jvm/sandbox/repeater/plugin/spi/MockStrategy.java) 搜索匹配的子调用，利用JVM-Sandbox的流程干预能力，有匹配结果，进行`throwReturnImmediately`返回，没有匹配结果则抛出异常阻断流程，避免重复调用污染数据
 
 ```java
-public void doMock(BeforeEvent event, Boolean entrance, InvokeType type) throws ProcessControlException {
-    /*
-     * 获取回放上下文
-     */
-    RepeatContext context = RepeatCache.getRepeatContext(Tracer.getTraceId());
-    /*
-     * mock执行条件
-     */
-    if (!skipMock(event, entrance, context) && context != null && context.getMeta().isMock()) {
-        try {
-            /*
-             * 构建mock请求
-             */
-            final MockRequest request = MockRequest.builder()
-                    ...
-                    .build();
-            /*
-             * 执行mock动作
-             */
-            final MockResponse mr = StrategyProvider.instance().provide(context.getMeta().getStrategyType()).execute(request);
-            /*
-             * 处理策略推荐结果
-             */
-            switch (mr.action) {
-  					...
-            }
-        } catch (ProcessControlException pce) {
-            throw pce;
-        } catch (Throwable throwable) {
-            ProcessControlException.throwThrowsImmediately(new RepeatException("unexpected code snippet here.", throwable));
+public void doMock(BeforeEvent event,Boolean entrance,InvokeType type)throws ProcessControlException{
+        /*
+         * 获取回放上下文
+         */
+        RepeatContext context=RepeatCache.getRepeatContext(Tracer.getTraceId());
+        /*
+         * mock执行条件
+         */
+        if(!skipMock(event,entrance,context)&&context!=null&&context.getMeta().isMock()){
+        try{
+/*
+ * 构建mock请求
+ */
+final MockRequest request=MockRequest.builder()
+        ...
+        .build();
+/*
+ * 执行mock动作
+ */
+final MockResponse mr=StrategyProvider.instance().provide(context.getMeta().getStrategyType()).execute(request);
+        /*
+         * 处理策略推荐结果
+         */
+        switch(mr.action){
+        ...
         }
-    }
-}
+        }catch(ProcessControlException pce){
+        throw pce;
+        }catch(Throwable throwable){
+        ProcessControlException.throwThrowsImmediately(new RepeatException("unexpected code snippet here.",throwable));
+        }
+        }
+        }
 ```
 
 ## 已支持的插件列表
 
 > Java生态中间件及各种框架众多，各公司技术选型差异较大没办法统一适配，目前适配了几款常用插件作为示例，如有需求可以通过issue方式提交，同时也欢迎大家来贡献开发插件
 
-|    				      	插件类型     		             | 录制   |  回放 | Mock  | 支持时间  |                  贡献者                   |
+|                            插件类型                         | 录制   |  回放 | Mock  | 支持时间  |                  贡献者                   |
 | -----------------------------------------------------------| ----- | :---: | :---: | :-----: |   :----------------------------------:    |
 | [http-plugin](/repeater-plugins/http-plugin)               |   √   |   √   |   ×   | 201906  |[zhaoyb1990](https://github.com/zhaoyb1990)|
 | [dubbo-plugin](/repeater-plugins/dubbo-plugin)             |   √   |   ×   |   √   | 201906  |[zhaoyb1990](https://github.com/zhaoyb1990)|
@@ -184,7 +191,7 @@ public void doMock(BeforeEvent event, Boolean entrance, InvokeType type) throws 
 | [java-plugin](/repeater-plugins/java-plugin)               |   √   |   √   |   √   | 201906  |[zhaoyb1990](https://github.com/zhaoyb1990)|
 | [redis-plugin](/repeater-plugins/redis-plugin)             |   √   |   ×   |   √   | 201910  |[ElesG](https://github.com/ElesG)          |
 | [hibernate](/repeater-plugins/hibernate-plugin)            |   √   |   ×   |   √   | 201910  |[zhaoyb1990](https://github.com/zhaoyb1990)|
-| [spring-data-jpa](/repeater-plugins/spring-data-jpa-plugin)|   √   |   ×   |   √   | 201910  |[zhaoyb1990](https://github.com/zhaoyb1990)|
+| [jpa](/repeater-plugins/jpa-plugin)                        |   √   |   ×   |   √   | 201910  |[zhaoyb1990](https://github.com/zhaoyb1990)|
 
 ## 相关文档
 
@@ -192,4 +199,5 @@ public void doMock(BeforeEvent event, Boolean entrance, InvokeType type) throws 
 - [插件开发手册](/docs/plugin-development.md)
 
 ## 钉钉交流群
+
 ![pic](http://sandbox-ecological.oss-cn-hangzhou.aliyuncs.com/DingTalkGroup.jpeg)

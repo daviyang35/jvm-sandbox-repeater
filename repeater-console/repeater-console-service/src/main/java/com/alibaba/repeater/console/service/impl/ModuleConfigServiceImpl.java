@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.net.URLEncoder;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,13 +54,11 @@ public class ModuleConfigServiceImpl implements ModuleConfigService {
         PageResult<ModuleConfigBO> result = new PageResult<>();
         Page<ModuleConfig> page = moduleConfigDao.selectByParams(params);
         result.setSuccess(true);
-        if (page.hasContent()) {
-            result.setPageIndex(params.getPage());
-            result.setCount(page.getTotalElements());
-            result.setTotalPage(page.getTotalPages());
-            result.setPageSize(params.getSize());
-            result.setData(page.getContent().stream().map(moduleConfigConverter::convert).collect(Collectors.toList()));
-        }
+        result.setPageIndex(page.getNumber());
+        result.setCount(page.getTotalElements());
+        result.setTotalPage(page.getTotalPages());
+        result.setPageSize(page.getSize());
+        result.setData(page.getContent().stream().map(moduleConfigConverter::convert).collect(Collectors.toList()));
         return result;
     }
 
@@ -76,16 +74,17 @@ public class ModuleConfigServiceImpl implements ModuleConfigService {
     @Override
     public RepeaterResult<ModuleConfigBO> saveOrUpdate(ModuleConfigParams params) {
         ModuleConfig moduleConfig = moduleConfigDao.query(params);
+        final LocalDateTime now = LocalDateTime.now();
         if (moduleConfig != null) {
             moduleConfig.setConfig(params.getConfig());
-            moduleConfig.setGmtModified(new Date());
+            moduleConfig.setGmtModified(now);
         } else {
             moduleConfig = new ModuleConfig();
             moduleConfig.setAppName(params.getAppName());
             moduleConfig.setEnvironment(params.getEnvironment());
             moduleConfig.setConfig(params.getConfig());
-            moduleConfig.setGmtCreate(new Date());
-            moduleConfig.setGmtModified(new Date());
+            moduleConfig.setGmtCreate(now);
+            moduleConfig.setGmtModified(now);
         }
         ModuleConfig callback = moduleConfigDao.saveOrUpdate(moduleConfig);
         return ResultHelper.success(moduleConfigConverter.convert(callback));
@@ -125,5 +124,15 @@ public class ModuleConfigServiceImpl implements ModuleConfigService {
             return ResultHelper.success(ips + " push failed.");
         }
         return ResultHelper.success();
+    }
+
+    @Override
+    public RepeaterResult<Void> delete(Long id) {
+        try {
+            moduleConfigDao.delete(id);
+            return ResultHelper.success();
+        } catch (Exception e) {
+            return ResultHelper.fail("删除失败");
+        }
     }
 }

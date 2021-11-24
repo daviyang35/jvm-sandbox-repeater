@@ -6,7 +6,7 @@
 
 ### 第一步 在repeater-plugins下创建一个maven-module
 
-repeater-plugin提供了基础依赖信息，新建的mybatis-plugin的pom.xml如下：
+repeater-plugins 提供了基础依赖信息，新建的mybatis-plugin的pom.xml如下：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -21,34 +21,9 @@ repeater-plugin提供了基础依赖信息，新建的mybatis-plugin的pom.xml�
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mybatis-plugin</artifactId>
-
-    <build>
-        <finalName>${project.name}-${project.version}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>attached</goal>
-                        </goals>
-                        <phase>package</phase>
-                        <configuration>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
+    <name>repeater-agent::plugins::mybatis</name>
 </project>
 ```
-
-增加了build插件，如果插件里面有依赖，需要把依赖的jar打包进去
 
 ### 第二步 实现`InvokePlugin`的SPI
 

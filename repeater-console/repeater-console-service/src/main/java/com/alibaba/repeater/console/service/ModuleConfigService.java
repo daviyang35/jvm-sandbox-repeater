@@ -20,4 +20,6 @@ public interface ModuleConfigService {
     RepeaterResult<ModuleConfigBO> saveOrUpdate(ModuleConfigParams params);
 
     RepeaterResult<ModuleConfigBO> push(ModuleConfigParams params);
+
+    RepeaterResult<Void> delete(Long id);
 }

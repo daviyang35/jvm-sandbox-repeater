@@ -4,6 +4,8 @@ import com.alibaba.repeater.console.common.params.ModuleInfoParams;
 import com.alibaba.repeater.console.dal.model.ModuleInfo;
 import com.alibaba.repeater.console.dal.repository.ModuleInfoRepository;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ import java.util.List;
  */
 @Component("moduleInfoDao")
 public class ModuleInfoDao {
+    private final Logger log = LoggerFactory.getLogger(ModuleInfoDao.class);
 
     @Resource
     private ModuleInfoRepository moduleInfoRepository;
@@ -32,7 +35,7 @@ public class ModuleInfoDao {
     }
 
     public Page<ModuleInfo> selectByParams(@NotNull final ModuleInfoParams params) {
-        Pageable pageable = new PageRequest(params.getPage() - 1, params.getSize(), new Sort(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(params.getPage() - 1, params.getSize(), Sort.Direction.DESC, "id");
         return moduleInfoRepository.findAll(
                 (root, query, cb) -> {
                     List<Predicate> predicates = Lists.newArrayList();
@@ -52,7 +55,7 @@ public class ModuleInfoDao {
     }
 
     public ModuleInfo save(ModuleInfo params) {
-        if (moduleInfoRepository.updateByAppNameAndIp(params) > 0) {
+        if (moduleInfoRepository.updateByAppNameAndEnvironment(params) > 0) {
             return params;
         }
         return moduleInfoRepository.saveAndFlush(params);
@@ -62,7 +65,15 @@ public class ModuleInfoDao {
         return moduleInfoRepository.saveAndFlush(params);
     }
 
-    public ModuleInfo findByAppNameAndIp(String appName, String ip) {
-        return moduleInfoRepository.findByAppNameAndIp(appName, ip);
+    public ModuleInfo findByAppNameAndEnvironment(String appName, String environment) {
+        return moduleInfoRepository.findByAppNameAndEnvironment(appName, environment);
+    }
+
+    public ModuleInfo findByAppNameAndEnvironmentAndIp(String appName, String environment, String ip) {
+        return moduleInfoRepository.findByAppNameAndEnvironmentAndIp(appName, environment, ip);
+    }
+
+    public void delete(Long id) {
+        moduleInfoRepository.deleteById(id);
     }
 }

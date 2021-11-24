@@ -1,0 +1,34 @@
+server:
+  port: 8001
+  servlet:
+    encoding:
+      charset: UTF-8
+
+spring:
+  application:
+    name: repeater-server
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: root
+    url: jdbc:mysql://localhost:3306/repeater?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+console:
+  use:
+    localCache: false
+
+mybatis:
+  type-aliases-package: com.alibaba.repeater.console.dal.model
+
+repeat:
+  config:
+    url: http://%s:%s/sandbox/default/module/http/repeater/pushConfig
+  reload:
+    url: http://%s:%s/sandbox/default/module/http/repeater/reload
+  repeat:
+    url: http://%s:%s/sandbox/default/module/http/repeater/repeat

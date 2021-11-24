@@ -28,7 +28,7 @@ public class ModuleConfigDao {
     private ModuleConfigRepository moduleConfigRepository;
 
     public Page<ModuleConfig> selectByParams(@NotNull final ModuleConfigParams params) {
-        Pageable pageable = new PageRequest(params.getPage() - 1, params.getSize(), new Sort(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(params.getPage() - 1, params.getSize(), Sort.Direction.DESC, "id");
         return moduleConfigRepository.findAll(
                 (root, query, cb) -> {
                     List<Predicate> predicates = Lists.newArrayList();
@@ -50,5 +50,9 @@ public class ModuleConfigDao {
 
     public ModuleConfig saveOrUpdate(ModuleConfig moduleConfig) {
         return moduleConfigRepository.saveAndFlush(moduleConfig);
+    }
+
+    public void delete(Long id) {
+        moduleConfigRepository.deleteById(id);
     }
 }

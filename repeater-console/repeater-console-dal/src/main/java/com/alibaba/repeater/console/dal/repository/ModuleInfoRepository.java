@@ -32,12 +32,15 @@ public interface ModuleInfoRepository extends JpaRepository<ModuleInfo, Long>, J
 
 
     @Modifying
-    @Query(
-            "update ModuleInfo set gmtModified =  :#{#moduleInfo.gmtModified}" +
-                    " where appName =  :#{#moduleInfo.appName}" +
-                    " and ip = :#{#moduleInfo.ip}"
-    )
-    int updateByAppNameAndIp(@Param("moduleInfo") ModuleInfo moduleInfo);
+    @Query("update ModuleInfo set gmtModified =  :#{#moduleInfo.gmtModified}, " +
+            "status = :#{#moduleInfo.status}, " +
+            "version = :#{#moduleInfo.version}, " +
+            "ip = :#{#moduleInfo.ip}, " +
+            "port = :#{#moduleInfo.port} " +
+            "where appName =  :#{#moduleInfo.appName} and environment= :#{#moduleInfo.environment}")
+    int updateByAppNameAndEnvironment(@Param("moduleInfo") ModuleInfo moduleInfo);
 
-    ModuleInfo findByAppNameAndIp(String appName, String ip);
+    ModuleInfo findByAppNameAndEnvironment(String appName, String environment);
+
+    ModuleInfo findByAppNameAndEnvironmentAndIp(String appName, String environment, String ip);
 }

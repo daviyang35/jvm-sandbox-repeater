@@ -19,7 +19,7 @@ public interface ModuleInfoService {
 
     RepeaterResult<List<ModuleInfoBO>> query(String appName);
 
-    RepeaterResult<ModuleInfoBO> query(String appName, String ip);
+    RepeaterResult<ModuleInfoBO> query(String appName, String environment);
 
     RepeaterResult<ModuleInfoBO> report(ModuleInfoBO params);
 
@@ -30,4 +30,6 @@ public interface ModuleInfoService {
     RepeaterResult<String> install(ModuleInfoParams params);
 
     RepeaterResult<String> reload(ModuleInfoParams params);
+
+    RepeaterResult<Void> delete(Long id);
 }

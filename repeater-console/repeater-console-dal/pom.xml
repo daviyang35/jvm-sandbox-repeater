@@ -5,20 +5,21 @@
     <parent>
         <artifactId>repeater-console</artifactId>
         <groupId>com.alibaba.jvm.sandbox</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>repeater-console-dal</artifactId>
+    <name>repeater-console::dal</name>
 
 
     <dependencies>
         <dependency>
             <groupId>com.alibaba.jvm.sandbox</groupId>
             <artifactId>repeater-console-common</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.1.0</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -27,7 +28,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>

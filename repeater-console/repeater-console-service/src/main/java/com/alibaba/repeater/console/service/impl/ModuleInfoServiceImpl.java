@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.*;
 import java.lang.management.ManagementFactory;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,14 +33,14 @@ import java.util.stream.Collectors;
 @Service("heartbeatService")
 public class ModuleInfoServiceImpl implements ModuleInfoService {
 
-    private static String activeURI = "http://%s:%s/sandbox/default/module/http/sandbox-module-mgr/active?ids=repeater";
+    private static final String activeURI = "http://%s:%s/sandbox/default/module/http/sandbox-module-mgr/active?ids=repeater";
 
-    private static String frozenURI = "http://%s:%s/sandbox/default/module/http/sandbox-module-mgr/frozen?ids=repeater";
+    private static final String frozenURI = "http://%s:%s/sandbox/default/module/http/sandbox-module-mgr/frozen?ids=repeater";
 
     @Value("${repeat.reload.url}")
     private String reloadURI;
 
-    private static String installBash = "sh %s/sandbox/bin/sandbox.sh -p %s -P 8820";
+    private static final String installBash = "sh %s/sandbox/bin/sandbox.sh -p %s -P 8820";
 
     @Resource
     private ModuleInfoDao moduleInfoDao;
@@ -51,15 +51,14 @@ public class ModuleInfoServiceImpl implements ModuleInfoService {
     @Override
     public PageResult<ModuleInfoBO> query(ModuleInfoParams params) {
         Page<ModuleInfo> page = moduleInfoDao.selectByParams(params);
+
         PageResult<ModuleInfoBO> result = new PageResult<>();
-        if (page.hasContent()) {
-            result.setSuccess(true);
-            result.setPageIndex(params.getPage());
-            result.setCount(page.getTotalElements());
-            result.setPageSize(params.getSize());
-            result.setTotalPage(page.getTotalPages());
-            result.setData(page.getContent().stream().map(moduleInfoConverter::convert).collect(Collectors.toList()));
-        }
+        result.setSuccess(true);
+        result.setPageIndex(params.getPage());
+        result.setCount(page.getTotalElements());
+        result.setPageSize(params.getSize());
+        result.setTotalPage(page.getTotalPages());
+        result.setData(page.getContent().stream().map(moduleInfoConverter::convert).collect(Collectors.toList()));
         return result;
     }
 
@@ -69,14 +68,16 @@ public class ModuleInfoServiceImpl implements ModuleInfoService {
         if (CollectionUtils.isEmpty(byAppName)) {
             return ResultHelper.fail("data not exist");
         }
-        return ResultHelper.success(
-                byAppName.stream().map(moduleInfoConverter::convert).collect(Collectors.toList())
-        );
+
+        final List<ModuleInfoBO> collect = byAppName.stream().
+                map(moduleInfoConverter::convert)
+                .collect(Collectors.toList());
+        return ResultHelper.success(collect);
     }
 
     @Override
-    public RepeaterResult<ModuleInfoBO> query(String appName, String ip) {
-        ModuleInfo moduleInfo = moduleInfoDao.findByAppNameAndIp(appName, ip);
+    public RepeaterResult<ModuleInfoBO> query(String appName, String environment) {
+        ModuleInfo moduleInfo = moduleInfoDao.findByAppNameAndEnvironment(appName, environment);
         if (moduleInfo == null) {
             return RepeaterResult.builder().message("data not exist").build();
         }
@@ -86,8 +87,9 @@ public class ModuleInfoServiceImpl implements ModuleInfoService {
     @Override
     public RepeaterResult<ModuleInfoBO> report(ModuleInfoBO params) {
         ModuleInfo moduleInfo = moduleInfoConverter.reconvert(params);
-        moduleInfo.setGmtModified(new Date());
-        moduleInfo.setGmtCreate(new Date());
+        final LocalDateTime date = LocalDateTime.now();
+        moduleInfo.setGmtModified(date);
+        moduleInfo.setGmtCreate(date);
         moduleInfoDao.save(moduleInfo);
         return ResultHelper.success(moduleInfoConverter.convert(moduleInfo));
     }
@@ -104,7 +106,7 @@ public class ModuleInfoServiceImpl implements ModuleInfoService {
 
     @Override
     public RepeaterResult<String> install(ModuleInfoParams params) {
-        // this is a fake local implement; must be overwrite in product usage;
+        // this is a fake local implement; must be overwritten in product usage;
         String runtimeBeanName = ManagementFactory.getRuntimeMXBean().getName();
         String pid = runtimeBeanName.split("@")[0];
         BufferedReader input = null;
@@ -113,6 +115,7 @@ public class ModuleInfoServiceImpl implements ModuleInfoService {
         try {
             // /Users/tom/sandbox/bin/sandbox.sh
             String[] path = StringUtils.split(System.getProperty("user.dir"), File.separator);
+
             String userDir = File.separator + path[0] + File.separator + path[1];
             Process process = Runtime.getRuntime().exec(String.format(installBash, userDir, pid));
             input = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -153,7 +156,7 @@ public class ModuleInfoServiceImpl implements ModuleInfoService {
 
     @Override
     public RepeaterResult<String> reload(ModuleInfoParams params) {
-        ModuleInfo moduleInfo = moduleInfoDao.findByAppNameAndIp(params.getAppName(), params.getIp());
+        ModuleInfo moduleInfo = moduleInfoDao.findByAppNameAndEnvironmentAndIp(params.getAppName(), params.getEnvironment(), params.getIp());
         if (moduleInfo == null) {
             return ResultHelper.fail("data not exist");
         }
@@ -161,8 +164,18 @@ public class ModuleInfoServiceImpl implements ModuleInfoService {
         return ResultHelper.fs(resp.isSuccess());
     }
 
+    @Override
+    public RepeaterResult<Void> delete(Long id) {
+        try {
+            moduleInfoDao.delete(id);
+            return ResultHelper.success();
+        } catch (Exception e) {
+            return ResultHelper.fail("删除错误");
+        }
+    }
+
     private RepeaterResult<ModuleInfoBO> execute(String uri, ModuleInfoParams params, ModuleStatus finishStatus) {
-        ModuleInfo moduleInfo = moduleInfoDao.findByAppNameAndIp(params.getAppName(), params.getIp());
+        ModuleInfo moduleInfo = moduleInfoDao.findByAppNameAndEnvironment(params.getAppName(), params.getEnvironment());
         if (moduleInfo == null) {
             return ResultHelper.fail("data not exist");
         }
@@ -170,9 +183,7 @@ public class ModuleInfoServiceImpl implements ModuleInfoService {
         if (!resp.isSuccess()) {
             return ResultHelper.fail(resp.getMessage());
         }
-        moduleInfo.setStatus(finishStatus.name());
-        moduleInfo.setGmtModified(new Date());
-        moduleInfoDao.saveAndFlush(moduleInfo);
+
         return ResultHelper.success(moduleInfoConverter.convert(moduleInfo));
     }
 }

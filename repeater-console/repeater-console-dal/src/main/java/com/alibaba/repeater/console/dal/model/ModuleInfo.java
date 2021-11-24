@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * {@link ModuleInfo}
@@ -25,10 +25,10 @@ public class ModuleInfo implements java.io.Serializable {
     private Long id;
 
     @Column(name = "gmt_create")
-    private Date gmtCreate;
+    private LocalDateTime gmtCreate;
 
     @Column(name = "gmt_modified")
-    private Date gmtModified;
+    private LocalDateTime gmtModified;
 
     @Column(name = "app_name")
     private String appName;

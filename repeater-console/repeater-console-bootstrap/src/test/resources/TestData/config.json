@@ -1,0 +1,56 @@
+{
+  "useTtl": true,
+  "degrade": false,
+  "exceptionThreshold": 1000,
+  "sampleRate": 10000,
+  "httpEntrancePatterns": [
+    "^/regress/.*$"
+  ],
+  "javaEntranceBehaviors": [
+    {
+      "classPattern": "com.alibaba.repeater.console.service.impl.RegressServiceImpl",
+      "methodPatterns": [
+        "getRegress"
+      ],
+      "includeSubClasses": false
+    }
+  ],
+  "javaSubInvokeBehaviors": [
+    {
+      "classPattern": "com.alibaba.repeater.console.service.impl.RegressServiceImpl",
+      "methodPatterns": [
+        "getRegressInner"
+      ],
+      "includeSubClasses": false
+    },
+    {
+      "classPattern": "com.alibaba.repeater.console.service.impl.RegressServiceImpl",
+      "methodPatterns": [
+        "findPartner"
+      ],
+      "includeSubClasses": false
+    },
+    {
+      "classPattern": "com.alibaba.repeater.console.service.impl.RegressServiceImpl",
+      "methodPatterns": [
+        "slogan"
+      ],
+      "includeSubClasses": false
+    }
+  ],
+  "pluginIdentities": [
+    "java",
+    "java-entrance",
+    "java-subInvoke",
+    "http",
+    "mybatis",
+    "hibernate",
+    "jpa",
+    "redis",
+    "ibatis"
+  ],
+  "repeatIdentities": [
+    "java",
+    "http"
+  ]
+}
