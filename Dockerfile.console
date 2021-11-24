@@ -1,22 +1,32 @@
 FROM openjdk:8-jre-alpine
 
-RUN ln -sf /usr/share/zoneinfo/Asia/Chongqing /etc/localtime && \
-    echo 'Asia/Chongqing' >/etc/timezone
+# 设置时区为上海
+RUN ln -sf /usr/share/zoneinfo/Asia/Chongqing /etc/localtime && echo 'Asia/Chongqing' >/etc/timezone
 
 VOLUME /tmp
-
-EXPOSE 8001/TCP
-
 WORKDIR /home/app
 
+# install dumb-init; helps dockerized java handle signals properly
+COPY bin/dumb-init_1.2.5_x86_64 /usr/bin/dumb-init
+ENTRYPOINT ["dumb-init", "--"]
+
 # process will run as non-root `app` user
-RUN addgroup app && \
-    adduser -s /bin/bash -D app -G app && \
+RUN chmod +x /usr/bin/dumb-init && \
+    addgroup app && \
+    adduser -s /bin/bash -h /home/app -G app -D app && \
     chown -R app:app .
 
 USER app
-COPY --chown=app:app target/repeater/repeater-bootstrap.jar /home/app/
 
-ENV JVM_OPTS=""
+ENV JVM_OPTS="-Xms64m -Xmx1024m"
 
-ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom $JVM_OPTS -jar /home/app/repeater-bootstrap.jar
+CMD java $JVM_OPTS -Djava.security.egd=file:/dev/./urandom -jar /home/app/app.jar
+
+EXPOSE 8001/TCP
+VOLUME /home/logs
+
+COPY dist/repeater-console-bootstrap.jar /home/app/app.jar
+
+
+
+

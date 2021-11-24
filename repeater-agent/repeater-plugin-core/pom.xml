@@ -16,7 +16,6 @@
         <dependency>
             <groupId>com.alibaba.jvm.sandbox</groupId>
             <artifactId>sandbox-api</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.alibaba.jvm.sandbox</groupId>
