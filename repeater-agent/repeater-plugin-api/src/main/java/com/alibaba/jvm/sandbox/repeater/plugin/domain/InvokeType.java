@@ -9,35 +9,39 @@ package com.alibaba.jvm.sandbox.repeater.plugin.domain;
  */
 public class InvokeType implements java.io.Serializable {
 
-    public static InvokeType HTTP = new InvokeType("http");
+    public static final InvokeType HTTP = new InvokeType("http");
 
-    public static InvokeType JAVA = new InvokeType("java");
+    public static final InvokeType JAVA = new InvokeType("java");
 
-    public static InvokeType MYBATIS = new InvokeType("mybatis");
+    public static final InvokeType MYBATIS = new InvokeType("mybatis");
 
-    public static InvokeType IBATIS = new InvokeType("ibatis");
+    public static final InvokeType IBATIS = new InvokeType("ibatis");
 
-    public static InvokeType REDIS = new InvokeType("redis");
+    public static final InvokeType REDIS = new InvokeType("redis");
 
-    public static InvokeType DUBBO = new InvokeType("dubbo");
+    public static final InvokeType DUBBO = new InvokeType("dubbo");
 
-    public static InvokeType HIBERNATE = new InvokeType("hibernate");
+    public static final InvokeType HIBERNATE = new InvokeType("hibernate");
 
-    public static InvokeType JPA = new InvokeType("jpa");
+    public static final InvokeType JPA = new InvokeType("jpa");
 
-    public static InvokeType SOCKETIO = new InvokeType("socketio");
+    public static final InvokeType SOCKETIO = new InvokeType("socketio");
 
-    public static InvokeType OKHTTP = new InvokeType("okhttp");
+    public static final InvokeType OKHTTP = new InvokeType("okhttp");
 
-    public static InvokeType APACHE_HTTP_CLIENT = new InvokeType("apache-http-client");
+    public static final InvokeType APACHE_HTTP_CLIENT = new InvokeType("apache-http-client");
 
-    public static InvokeType GUAVA_CACHE = new InvokeType("guava-cache");
+    public static final InvokeType GUAVA_CACHE = new InvokeType("guava-cache");
 
-    public static InvokeType EH_CACHE = new InvokeType("eh-cache");
+    public static final InvokeType EH_CACHE = new InvokeType("eh-cache");
 
-    public static InvokeType CAFFEINE_CACHE = new InvokeType("caffeine-cache");
+    public static final InvokeType CAFFEINE_CACHE = new InvokeType("caffeine-cache");
 
-    private String name;
+    public static final InvokeType MYBATIS_PLUS = new InvokeType("mybatis-plus");
+
+    public static final InvokeType OPENFEIGN = new InvokeType("openfeign");
+
+    private final String name;
 
     public InvokeType(String name) {
         this.name = name;

@@ -46,3 +46,5 @@ cp ${PROJECT_ROOT_DIR}/repeater-agent/repeater-plugins/hibernate-plugin/target/h
 cp ${PROJECT_ROOT_DIR}/repeater-agent/repeater-plugins/mybatis-plugin/target/mybatis-plugin-*-jar-with-dependencies.jar ${REPEATER_TARGET_DIR}/plugins/mybatis-plugin.jar
 cp ${PROJECT_ROOT_DIR}/repeater-agent/repeater-plugins/okhttp-plugin/target/okhttp-plugin-*-jar-with-dependencies.jar ${REPEATER_TARGET_DIR}/plugins/okhttp-plugin.jar
 cp ${PROJECT_ROOT_DIR}/repeater-agent/repeater-plugins/dubbo-plugin/target/dubbo-plugin-*-jar-with-dependencies.jar ${REPEATER_TARGET_DIR}/plugins/dubbo-plugin.jar
+cp ${PROJECT_ROOT_DIR}/repeater-agent/repeater-plugins/mybatis-plus-plugin/target/mybatis-plus-plugin-*-jar-with-dependencies.jar ${REPEATER_TARGET_DIR}/plugins/mybatis-plus-plugin.jar
+cp ${PROJECT_ROOT_DIR}/repeater-agent/repeater-plugins/openfeign-plugin/target/openfeign-plugin-*-jar-with-dependencies.jar ${REPEATER_TARGET_DIR}/plugins/openfeign-plugin.jar

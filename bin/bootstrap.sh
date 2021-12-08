@@ -9,7 +9,7 @@ exit_on_err()
     exit ${1}
 }
 
-PID=$(ps -ef | grep "repeater-bootstrap.jar" | grep "java" | grep -v grep | awk '{print $2}')
+PID=$(ps -ef | grep "repeater-console-bootstrap.jar" | grep "java" | grep -v grep | awk '{print $2}')
 
 expr ${PID} "+" 10 &> /dev/null
 
@@ -26,5 +26,5 @@ fi
 #    sh ./install-local.sh || exit_on_err 1 "install repeater failed"
 #fi
 
-java -javaagent:${HOME}/sandbox/lib/sandbox-agent.jar=server.port=8820\;server.ip=0.0.0.0 -Dapp.name=repeater -Dapp.env=daily \
+java -javaagent:${HOME}/sandbox/lib/sandbox-agent.jar=server.port=8820\;server.ip=0.0.0.0 -DREPATER_APP_NAME=repeater -DREPATER_APP_ENV=daily \
      -jar ../dist/repeater-bootstrap.jar

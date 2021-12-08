@@ -1,12 +1,11 @@
 package com.alibaba.jvm.sandbox.repeater.plugin.core.model;
 
 import com.alibaba.jvm.sandbox.repeater.plugin.core.util.ExceptionAware;
+import com.alibaba.jvm.sandbox.repeater.plugin.core.util.PropertyUtil;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.RepeaterConfig;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
-import static com.alibaba.jvm.sandbox.repeater.plugin.core.util.PropertyUtil.getSystemPropertyOrDefault;
 
 /**
  * {@link ApplicationModel} 描述一个基础应用模型
@@ -20,6 +19,10 @@ import static com.alibaba.jvm.sandbox.repeater.plugin.core.util.PropertyUtil.get
  * @author zhaoyb1990
  */
 public class ApplicationModel {
+    public static final String DEFAULT_ENV = "default";
+    public static final String DEFAULT_NAME = "unknown";
+    public static final String REPEATER_APP_NAME = "REPEATER_APP_NAME";
+    public static final String REPEATER_APP_ENV = "REPEATER_APP_ENV";
 
     private String appName;
 
@@ -29,16 +32,15 @@ public class ApplicationModel {
 
     private volatile RepeaterConfig config;
 
-    private ExceptionAware ea = new ExceptionAware();
+    private ExceptionAware exceptionAware = new ExceptionAware();
 
     private volatile boolean fusing = false;
 
     private static ApplicationModel instance = new ApplicationModel();
 
     private ApplicationModel() {
-        // for example, you can define it your self
-        this.appName = getSystemPropertyOrDefault("app.name", "unknown");
-        this.environment = getSystemPropertyOrDefault("app.env", "unknown");
+        this.appName = PropertyUtil.getPropertyOrDefault(REPEATER_APP_NAME, DEFAULT_NAME);
+        this.environment = PropertyUtil.getPropertyOrDefault(REPEATER_APP_ENV, DEFAULT_ENV);
         try {
             this.host = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
@@ -75,9 +77,9 @@ public class ApplicationModel {
      * @param throwable 异常类型
      */
     public void exceptionOverflow(Throwable throwable) {
-        if (ea.exceptionOverflow(throwable, config == null ? 1000 : config.getExceptionThreshold())) {
+        if (exceptionAware.exceptionOverflow(throwable, config == null ? 1000 : config.getExceptionThreshold())) {
             fusing = true;
-            ea.printErrorLog();
+            exceptionAware.printErrorLog();
         }
     }
 
@@ -117,12 +119,12 @@ public class ApplicationModel {
         this.config = config;
     }
 
-    public ExceptionAware getEa() {
-        return ea;
+    public ExceptionAware getExceptionAware() {
+        return exceptionAware;
     }
 
-    public void setEa(ExceptionAware ea) {
-        this.ea = ea;
+    public void setExceptionAware(ExceptionAware exceptionAware) {
+        this.exceptionAware = exceptionAware;
     }
 
     public boolean isFusing() {
