@@ -45,7 +45,7 @@ public class DefaultEventListener implements EventListener {
      * <p>
      * 通过事件偏移量进行判断
      */
-    private ThreadLocal<AtomicInteger> eventOffset = new ThreadLocal<AtomicInteger>() {
+    private final ThreadLocal<AtomicInteger> eventOffset = new ThreadLocal<AtomicInteger>() {
         @Override
         protected AtomicInteger initialValue() {
             return new AtomicInteger(0);
@@ -184,8 +184,6 @@ public class DefaultEventListener implements EventListener {
         if (entrance && event.type == Type.BEFORE) {
             if (Tracer.getContext() == null) {
                 log.error("occur bug!! Tracer.getContext() can't be null");
-                // Debug me
-                int i = 0;
             }
             return Tracer.getContext().inTimeSample(invokeType);
         } else {
@@ -310,10 +308,10 @@ public class DefaultEventListener implements EventListener {
      * <p>
      * 降级之后只有回放流量可以通过
      *
-     * @param event 事件
+     * @param ignored 事件
      * @return 是否通过
      */
-    protected boolean access(Event event) {
+    protected boolean access(Event ignored) {
         return ApplicationModel.instance().isWorkingOn() &&
                 (!ApplicationModel.instance().isDegrade() || RepeatCache.isRepeatFlow(Tracer.getTraceId()));
     }
