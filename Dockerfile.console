@@ -1,32 +1,33 @@
 FROM openjdk:8-jre-alpine
 
-# 设置时区为上海
-RUN ln -sf /usr/share/zoneinfo/Asia/Chongqing /etc/localtime && echo 'Asia/Chongqing' >/etc/timezone
-
 VOLUME /tmp
 WORKDIR /home/app
 
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
+    apk update && apk upgrade && \
+    apk add --no-cache --update tzdata && \
+    ln -sf /usr/share/zoneinfo/Asia/Chongqing /etc/localtime && \
+    echo 'Asia/Chongqing' >/etc/timezone
+
 # install dumb-init; helps dockerized java handle signals properly
 COPY bin/dumb-init_1.2.5_x86_64 /usr/bin/dumb-init
+RUN chmod +x /usr/bin/dumb-init
 ENTRYPOINT ["dumb-init", "--"]
 
 # process will run as non-root `app` user
-RUN chmod +x /usr/bin/dumb-init && \
-    addgroup app && \
+RUN addgroup app && \
     adduser -s /bin/bash -h /home/app -G app -D app && \
     chown -R app:app .
 
 USER app
 
-ENV JVM_OPTS="-Xms64m -Xmx1024m"
+VOLUME /home/app/logs
+
+ENV JVM_OPTS="-Xms256m -Xmx1024m"
 
 CMD java $JVM_OPTS -Djava.security.egd=file:/dev/./urandom -jar /home/app/app.jar
 
 EXPOSE 8001/TCP
-VOLUME /home/logs
 
-COPY dist/repeater-console-bootstrap.jar /home/app/app.jar
-
-
-
+COPY repeater-console/repeater-console-bootstrap/target/repeater-console-bootstrap.jar /home/app/app.jar
 

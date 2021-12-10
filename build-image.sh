@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set +e
+
 # exit shell with err_code
 # $1 : err_code
 # $2 : err_msg
@@ -15,5 +17,5 @@ mvn clean package -Dmaven.test.skip=true || exit_on_err 1 "package repeater fail
 # copy files
 sh bin/package.sh || exit_on_err 1 "copy repeater failed."
 
-docker build -f Dockerfile.console -t jvm-sandbox-console . || exit_on_err 1 "package repeater failed."
+docker build -f Dockerfile.console -t sandbox-repeater-console . || exit_on_err 1 "package repeater failed."
 docker build -f Dockerfile.agent -t openjdk:8-jdk-repeater . || exit_on_err 1 "package repeater failed."

@@ -28,10 +28,7 @@ wget http://172.10.0.26:9000/common/sandbox-module.tar.gz -O /tmp/sandbox-module
 rm -f /tmp/sandbox.tar.gz && rm -f /tmp/sandbox-module.tar.gz
 
 # 设置 repeater-console 地址
-sed -i 's/localhost:8001/aos-repeater-console:8001/g' /root/.sandbox-module/cfg/repeater.properties
-
-# 强制指定 hosts aos-repeater-console 地址
-echo "192.168.3.174 aos-repeater-console" >> /etc/hosts
+sed -i 's/localhost:8001/sandbox-repeater-console:8001/g' /root/.sandbox-module/cfg/repeater.properties
 
 # JVM 载入 sandbox
 export token="$(date | head | cksum | sed 's/ //g')"

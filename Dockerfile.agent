@@ -8,14 +8,11 @@ WORKDIR /home/app
 
 # install dumb-init; helps dockerized java handle signals properly
 COPY bin/dumb-init_1.2.5_x86_64 /usr/bin/dumb-init
+RUN chmod +x /usr/bin/dumb-init
 ENTRYPOINT ["dumb-init", "--"]
 
-COPY jvm-sandbox-repeater/sandbox /home/app/sandbox/
-COPY dist/sandbox-module /home/app/.sandbox-module/
-
 # process will run as non-root `app` user
-RUN chmod +x /usr/bin/dumb-init && \
-    addgroup app && \
+RUN addgroup app && \
     adduser -s /bin/bash -h /home/app -G app -D app && \
     chown -R app:app .
 
@@ -28,4 +25,5 @@ EXPOSE 8820/TCP
 
 CMD java $JVM_OPTS $JVM_REPEATER -Djava.security.egd=file:/dev/./urandom -jar /home/app/app.jar
 
-
+COPY bin/sandbox /home/app/sandbox/
+COPY dist/sandbox-module /home/app/.sandbox-module/

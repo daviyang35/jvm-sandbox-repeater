@@ -113,7 +113,8 @@ public class ModuleConfigServiceImpl implements ModuleConfigService {
             return ResultHelper.fail("serialize config occurred error, message = " + e.getMessage());
         }
         final Map<String, String> paramMap = new HashMap<>(2);
-        paramMap.put(Constants.DATA_TRANSPORT_IDENTIFY, URLEncoder.encode(data));
+
+        paramMap.put(Constants.DATA_TRANSPORT_IDENTIFY, data);
         final Map<String, HttpUtil.Resp> respMap = Maps.newHashMap();
         result.getData().forEach(module -> {
             HttpUtil.Resp resp = HttpUtil.doGet(String.format(configURL, module.getIp(), module.getPort()), paramMap);
