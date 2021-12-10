@@ -29,12 +29,12 @@ import static com.alibaba.jvm.sandbox.repeater.plugin.Constants.REPEAT_HEARTBEAT
 public class HeartbeatHandler {
     private final Long FREQUENCY = Long.parseLong(PropertyUtil.getPropertyOrDefault(REPEAT_HEARTBEAT_INTERVAL, "10"));
     private String heartbeatUrl;
-    private static ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
+    private static final ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
             new BasicThreadFactory.Builder().namingPattern("heartbeat-pool-%d").daemon(true).build());
 
     private final ConfigInfo configInfo;
     private final ModuleManager moduleManager;
-    private AtomicBoolean initialize = new AtomicBoolean(false);
+    private final AtomicBoolean initialize = new AtomicBoolean(false);
 
     public HeartbeatHandler(ConfigInfo configInfo, ModuleManager moduleManager) {
         this.configInfo = configInfo;
@@ -65,6 +65,11 @@ public class HeartbeatHandler {
     }
 
     private void innerReport() {
+        if (null == heartbeatUrl) {
+            log.debug("report heartbeat url is empty string. this may first schedule execute");
+            return;
+        }
+
         Map<String, String> params = new HashMap<String, String>(8);
         params.put("appName", ApplicationModel.instance().getAppName());
         params.put("environment", ApplicationModel.instance().getEnvironment());
@@ -73,8 +78,7 @@ public class HeartbeatHandler {
         params.put("version", Constants.VERSION);
         try {
             params.put("status", moduleManager.isActivated(Constants.MODULE_ID) ? "ACTIVE" : "FROZEN");
-        } catch (ModuleException e) {
-            // ignore
+        } catch (ModuleException ignored) {
         }
 
         HttpUtil.doGet(heartbeatUrl, params);
