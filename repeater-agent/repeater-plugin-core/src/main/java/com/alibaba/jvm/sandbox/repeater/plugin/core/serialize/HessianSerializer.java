@@ -3,6 +3,7 @@ package com.alibaba.jvm.sandbox.repeater.plugin.core.serialize;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.bridge.ClassloaderBridge;
 import com.caucho.hessian.io.*;
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.kohsuke.MetaInfServices;
 
 import java.io.ByteArrayInputStream;
@@ -15,6 +16,7 @@ import java.util.Map;
  *
  * @author zhaoyb1990
  */
+@Slf4j
 @MetaInfServices(Serializer.class)
 public class HessianSerializer extends AbstractSerializerAdapter {
     private Map<String, SerializerFactory> cached = Maps.newConcurrentMap();
@@ -39,6 +41,7 @@ public class HessianSerializer extends AbstractSerializerAdapter {
             output.close();
         } catch (Throwable t) {
             // may produce sof exception
+            log.error("HessianSerializer writeObject error. class({}) value({})", object.getClass(), object);
             throw new SerializeException("[Error-1001]-hessian-serialize-error", t);
         }
         return byteArray.toByteArray();

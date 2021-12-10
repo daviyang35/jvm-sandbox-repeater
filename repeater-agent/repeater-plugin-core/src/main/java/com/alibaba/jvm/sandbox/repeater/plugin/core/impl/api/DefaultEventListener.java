@@ -85,7 +85,7 @@ public class DefaultEventListener implements EventListener {
 
             // 执行采样计算（只有entrance插件负责计算采样，子调用插件不计算)
             if (!sample(event)) {
-                if (log.isDebugEnabled()) {
+                if (log.isDebugEnabled() && entrance) {
                     log.debug("event missing sample rule,type={},event={}", invokeType, event.type);
                 }
                 return;

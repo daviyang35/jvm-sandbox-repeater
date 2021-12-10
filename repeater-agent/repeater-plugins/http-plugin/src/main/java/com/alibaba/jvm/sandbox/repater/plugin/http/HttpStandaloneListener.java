@@ -115,9 +115,11 @@ public class HttpStandaloneListener extends DefaultEventListener implements Invo
         // 根据 requestURI 进行采样匹配
         List<String> patterns = ApplicationModel.instance().getConfig().getHttpEntrancePatterns();
         if (!matchRequestURI(patterns, req.getRequestURI())) {
-            log.debug("current uri {} can't match any httpEntrancePatterns, ignore this request", req.getRequestURI());
+            log.debug("current uri {} can't match any httpEntrancePatterns({}), ignore this request", req.getRequestURI(), patterns);
             Tracer.getContext().setSampled(false);
             return;
+        } else {
+            log.debug("uri {} matched httpEntrancePatterns({})", req.getRequestURI(), patterns);
         }
         WrapperResponseCopier wrapperRes = new WrapperResponseCopier(resp);
         WrapperRequest wrapperReq;
