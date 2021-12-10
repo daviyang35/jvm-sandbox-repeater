@@ -183,7 +183,7 @@ public class DefaultEventListener implements EventListener {
     protected boolean sample(Event event) {
         if (entrance && event.type == Type.BEFORE) {
             if (Tracer.getContext() == null) {
-                log.error("occur bug!!");
+                log.error("occur bug!! Tracer.getContext() can't be null");
                 // Debug me
                 int i = 0;
             }
