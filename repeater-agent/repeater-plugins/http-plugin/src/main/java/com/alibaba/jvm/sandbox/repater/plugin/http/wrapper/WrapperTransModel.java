@@ -21,27 +21,27 @@ public class WrapperTransModel {
     /**
      * 请求的URL
      */
-    private String requestURL;
+    private final String requestURL;
     /**
      * 请求的URI
      */
-    private String requestURI;
+    private final String requestURI;
     /**
      * 本地端口号
      */
-    private int port;
+    private final int port;
     /**
      * 请求方法
      */
-    private String method;
+    private final String method;
     /**
      * 内容类型
      */
-    private String contentType;
+    private final String contentType;
     /**
      * 请求headers
      */
-    private Map<String, String> headers;
+    private final Map<String, String> headers;
     /**
      * body
      */
@@ -49,7 +49,7 @@ public class WrapperTransModel {
     /**
      * 请求参数 - 没有拦截post body方式提交
      */
-    private Map<String, String[]> paramsMap;
+    private final Map<String, String[]> paramsMap;
     /**
      * 返回值
      */

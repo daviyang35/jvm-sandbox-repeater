@@ -106,15 +106,15 @@ public class JavaSerializer extends AbstractSerializer {
         }
     }
 
-    protected void introspect(Class<?> cl) {
+    protected void introspect(Class<?> aClass) {
         if (_writeReplace != null)
             _writeReplace.setAccessible(true);
 
         ArrayList<Field> primitiveFields = new ArrayList<Field>();
         ArrayList<Field> compoundFields = new ArrayList<Field>();
 
-        for (; cl != null; cl = cl.getSuperclass()) {
-            Field[] fields = cl.getDeclaredFields();
+        for (; aClass != null; aClass = aClass.getSuperclass()) {
+            Field[] fields = aClass.getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
                 Field field = fields[i];
 

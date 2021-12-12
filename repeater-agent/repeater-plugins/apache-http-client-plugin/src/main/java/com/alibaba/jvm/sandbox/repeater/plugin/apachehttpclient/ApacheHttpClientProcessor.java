@@ -129,11 +129,11 @@ public class ApacheHttpClientProcessor extends DefaultInvocationProcessor {
             return DEFAULT_REQUEST_BODY_STR;
         }
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        MethodUtils.invokeMethod(httpEntity, "writeTo", baos);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        MethodUtils.invokeMethod(httpEntity, "writeTo", byteArrayOutputStream);
         Charset charset = this.determineCharset(httpEntity, classLoader);
 
-        return new String(baos.toByteArray(), charset);
+        return new String(byteArrayOutputStream.toByteArray(), charset);
     }
 
     private Charset determineCharset(Object httpEntity, ClassLoader classLoader) throws Exception {

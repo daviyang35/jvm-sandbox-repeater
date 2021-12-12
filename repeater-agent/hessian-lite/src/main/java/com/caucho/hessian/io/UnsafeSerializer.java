@@ -67,7 +67,7 @@ public class UnsafeSerializer extends AbstractSerializer {
     private static final Logger log
             = Logger.getLogger(UnsafeSerializer.class.getName());
 
-    private static boolean _isEnabled;
+    private static final boolean _isEnabled;
     private static final Unsafe _unsafe;
 
     private static final WeakHashMap<Class<?>, SoftReference<UnsafeSerializer>> _serializerMap
@@ -105,37 +105,8 @@ public class UnsafeSerializer extends AbstractSerializer {
         }
     }
 
-    protected void introspect(Class<?> cl) {
-        ArrayList<Field> primitiveFields = new ArrayList<Field>();
-        ArrayList<Field> compoundFields = new ArrayList<Field>();
-
-        for (; cl != null; cl = cl.getSuperclass()) {
-            Field[] fields = cl.getDeclaredFields();
-
-            for (int i = 0; i < fields.length; i++) {
-                Field field = fields[i];
-
-                if (Modifier.isTransient(field.getModifiers())
-                        || Modifier.isStatic(field.getModifiers())) {
-                    continue;
-                }
-
-                // XXX: could parameterize the handler to only deal with public
-                field.setAccessible(true);
-
-                if (field.getType().isPrimitive()
-                        || (field.getType().getName().startsWith("java.lang.")
-                        && !field.getType().equals(Object.class))) {
-                    primitiveFields.add(field);
-                } else {
-                    compoundFields.add(field);
-                }
-            }
-        }
-
-        ArrayList<Field> fields = new ArrayList<Field>();
-        fields.addAll(primitiveFields);
-        fields.addAll(compoundFields);
+    protected void introspect(Class<?> aClass) {
+        ArrayList<Field> fields = getFields(aClass);
 
         _fields = new Field[fields.size()];
         fields.toArray(_fields);
@@ -145,6 +116,39 @@ public class UnsafeSerializer extends AbstractSerializer {
         for (int i = 0; i < _fields.length; i++) {
             _fieldSerializers[i] = getFieldSerializer(_fields[i]);
         }
+    }
+
+    private ArrayList<Field> getFields(Class<?> aClass) {
+        ArrayList<Field> fields = new ArrayList<Field>();
+
+        ArrayList<Field> primitiveFields = new ArrayList<Field>();
+        ArrayList<Field> compoundFields = new ArrayList<Field>();
+
+        for (; aClass != null; aClass = aClass.getSuperclass()) {
+            Field[] aFields = aClass.getDeclaredFields();
+
+            for (Field aField : aFields) {
+                if (Modifier.isTransient(aField.getModifiers())
+                        || Modifier.isStatic(aField.getModifiers())) {
+                    continue;
+                }
+
+                // XXX: could parameterize the handler to only deal with public
+                aField.setAccessible(true);
+
+                if (aField.getType().isPrimitive()
+                        || (aField.getType().getName().startsWith("java.lang.")
+                        && !aField.getType().equals(Object.class))) {
+                    primitiveFields.add(aField);
+                } else {
+                    compoundFields.add(aField);
+                }
+            }
+        }
+
+        fields.addAll(primitiveFields);
+        fields.addAll(compoundFields);
+        return fields;
     }
 
     @Override
@@ -263,7 +267,7 @@ public class UnsafeSerializer extends AbstractSerializer {
         }
 
         @Override
-        final void serialize(AbstractHessianOutput out, Object obj)
+        void serialize(AbstractHessianOutput out, Object obj)
                 throws IOException {
             try {
                 Object value = _unsafe.getObject(obj, _offset);
@@ -284,11 +288,9 @@ public class UnsafeSerializer extends AbstractSerializer {
     }
 
     final static class BooleanFieldSerializer extends FieldSerializer {
-        private final Field _field;
         private final long _offset;
 
         BooleanFieldSerializer(Field field) {
-            _field = field;
             _offset = _unsafe.objectFieldOffset(field);
 
             if (_offset == Unsafe.INVALID_FIELD_OFFSET)
@@ -304,18 +306,16 @@ public class UnsafeSerializer extends AbstractSerializer {
     }
 
     final static class ByteFieldSerializer extends FieldSerializer {
-        private final Field _field;
         private final long _offset;
 
         ByteFieldSerializer(Field field) {
-            _field = field;
             _offset = _unsafe.objectFieldOffset(field);
 
             if (_offset == Unsafe.INVALID_FIELD_OFFSET)
                 throw new IllegalStateException();
         }
 
-        final void serialize(AbstractHessianOutput out, Object obj)
+        void serialize(AbstractHessianOutput out, Object obj)
                 throws IOException {
             int value = _unsafe.getByte(obj, _offset);
 
@@ -324,18 +324,16 @@ public class UnsafeSerializer extends AbstractSerializer {
     }
 
     final static class CharFieldSerializer extends FieldSerializer {
-        private final Field _field;
         private final long _offset;
 
         CharFieldSerializer(Field field) {
-            _field = field;
             _offset = _unsafe.objectFieldOffset(field);
 
             if (_offset == Unsafe.INVALID_FIELD_OFFSET)
                 throw new IllegalStateException();
         }
 
-        final void serialize(AbstractHessianOutput out, Object obj)
+        void serialize(AbstractHessianOutput out, Object obj)
                 throws IOException {
             char value = _unsafe.getChar(obj, _offset);
 
@@ -344,18 +342,16 @@ public class UnsafeSerializer extends AbstractSerializer {
     }
 
     final static class ShortFieldSerializer extends FieldSerializer {
-        private final Field _field;
         private final long _offset;
 
         ShortFieldSerializer(Field field) {
-            _field = field;
             _offset = _unsafe.objectFieldOffset(field);
 
             if (_offset == Unsafe.INVALID_FIELD_OFFSET)
                 throw new IllegalStateException();
         }
 
-        final void serialize(AbstractHessianOutput out, Object obj)
+        void serialize(AbstractHessianOutput out, Object obj)
                 throws IOException {
             int value = _unsafe.getShort(obj, _offset);
 
@@ -364,18 +360,16 @@ public class UnsafeSerializer extends AbstractSerializer {
     }
 
     final static class IntFieldSerializer extends FieldSerializer {
-        private final Field _field;
         private final long _offset;
 
         IntFieldSerializer(Field field) {
-            _field = field;
             _offset = _unsafe.objectFieldOffset(field);
 
             if (_offset == Unsafe.INVALID_FIELD_OFFSET)
                 throw new IllegalStateException();
         }
 
-        final void serialize(AbstractHessianOutput out, Object obj)
+        void serialize(AbstractHessianOutput out, Object obj)
                 throws IOException {
             int value = _unsafe.getInt(obj, _offset);
 
@@ -384,18 +378,16 @@ public class UnsafeSerializer extends AbstractSerializer {
     }
 
     final static class LongFieldSerializer extends FieldSerializer {
-        private final Field _field;
         private final long _offset;
 
         LongFieldSerializer(Field field) {
-            _field = field;
             _offset = _unsafe.objectFieldOffset(field);
 
             if (_offset == Unsafe.INVALID_FIELD_OFFSET)
                 throw new IllegalStateException();
         }
 
-        final void serialize(AbstractHessianOutput out, Object obj)
+        void serialize(AbstractHessianOutput out, Object obj)
                 throws IOException {
             long value = _unsafe.getLong(obj, _offset);
 
@@ -404,18 +396,16 @@ public class UnsafeSerializer extends AbstractSerializer {
     }
 
     final static class FloatFieldSerializer extends FieldSerializer {
-        private final Field _field;
         private final long _offset;
 
         FloatFieldSerializer(Field field) {
-            _field = field;
             _offset = _unsafe.objectFieldOffset(field);
 
             if (_offset == Unsafe.INVALID_FIELD_OFFSET)
                 throw new IllegalStateException();
         }
 
-        final void serialize(AbstractHessianOutput out, Object obj)
+        void serialize(AbstractHessianOutput out, Object obj)
                 throws IOException {
             double value = _unsafe.getFloat(obj, _offset);
 
@@ -424,18 +414,16 @@ public class UnsafeSerializer extends AbstractSerializer {
     }
 
     final static class DoubleFieldSerializer extends FieldSerializer {
-        private final Field _field;
         private final long _offset;
 
         DoubleFieldSerializer(Field field) {
-            _field = field;
             _offset = _unsafe.objectFieldOffset(field);
 
             if (_offset == Unsafe.INVALID_FIELD_OFFSET)
                 throw new IllegalStateException();
         }
 
-        final void serialize(AbstractHessianOutput out, Object obj)
+        void serialize(AbstractHessianOutput out, Object obj)
                 throws IOException {
             double value = _unsafe.getDouble(obj, _offset);
 
@@ -444,11 +432,9 @@ public class UnsafeSerializer extends AbstractSerializer {
     }
 
     final static class StringFieldSerializer extends FieldSerializer {
-        private final Field _field;
         private final long _offset;
 
         StringFieldSerializer(Field field) {
-            _field = field;
             _offset = _unsafe.objectFieldOffset(field);
 
             if (_offset == Unsafe.INVALID_FIELD_OFFSET)
@@ -456,7 +442,7 @@ public class UnsafeSerializer extends AbstractSerializer {
         }
 
         @Override
-        final void serialize(AbstractHessianOutput out, Object obj)
+        void serialize(AbstractHessianOutput out, Object obj)
                 throws IOException {
             String value = (String) _unsafe.getObject(obj, _offset);
 
@@ -465,11 +451,9 @@ public class UnsafeSerializer extends AbstractSerializer {
     }
 
     final static class DateFieldSerializer extends FieldSerializer {
-        private final Field _field;
         private final long _offset;
 
         DateFieldSerializer(Field field) {
-            _field = field;
             _offset = _unsafe.objectFieldOffset(field);
 
             if (_offset == Unsafe.INVALID_FIELD_OFFSET)

@@ -19,7 +19,7 @@ import java.util.Map;
 @Slf4j
 @MetaInfServices(Serializer.class)
 public class HessianSerializer extends AbstractSerializerAdapter {
-    private Map<String, SerializerFactory> cached = Maps.newConcurrentMap();
+    private final Map<String, SerializerFactory> cached = Maps.newConcurrentMap();
 
     private static boolean isJava8() {
         String javaVersion = System.getProperty("java.specification.version");
