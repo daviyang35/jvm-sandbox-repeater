@@ -6,6 +6,7 @@ import com.alibaba.jvm.sandbox.repeater.plugin.core.cache.RecordCache;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.model.ApplicationModel;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.serialize.SerializeException;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.trace.Tracer;
+import com.alibaba.jvm.sandbox.repeater.plugin.core.util.JSONUtil;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.wrapper.SerializerWrapper;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.Invocation;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.InvokeType;
@@ -34,11 +35,19 @@ public class DefaultInvocationListener implements InvocationListener {
 
     @Override
     public void onInvocation(Invocation invocation) {
+        if (invocation.getResponse() != null) {
+            final String responseClassName = invocation.getResponse().getClass().getName();
+            if (responseClassName.contentEquals("com.netflix.loadbalancer.ServerStats")) {
+                log.debug("ignored serialize class({})", responseClassName);
+                return;
+            }
+        }
+
         try {
             SerializerWrapper.inTimeSerialize(invocation);
         } catch (SerializeException e) {
             Tracer.getContext().setSampled(false);
-            log.error("Error occurred serialize", e);
+            log.error("Error occurred serialize: \n{}\n", JSONUtil.toJSONString(invocation), e);
         }
         if (invocation.isEntrance()) {
             ApplicationModel am = ApplicationModel.instance();

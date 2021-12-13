@@ -36,9 +36,13 @@
       ]
     }
   ],
+  "javaIgnoredBehaviors": [
+  ],
   "pluginIdentities": [
     "http",
     "java",
+    "java-entrance",
+    "java-subInvoke",
     "apache-http-client",
     "caffeine-cache",
     "eh-cache",
