@@ -36,8 +36,6 @@
       ]
     }
   ],
-  "javaIgnoredBehaviors": [
-  ],
   "pluginIdentities": [
     "http",
     "java",
@@ -50,7 +48,9 @@
     "hibernate",
     "ibatis",
     "mybatis",
+    "mybatis-plus",
     "okhttp",
+    "openfeign",
     "redis",
     "socketio",
     "jpa"

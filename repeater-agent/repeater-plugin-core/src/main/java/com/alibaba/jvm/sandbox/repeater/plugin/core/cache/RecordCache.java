@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author zhaoyb1990
  */
+@Slf4j
 public class RecordCache {
 
     private static final LoadingCache<Integer, Invocation> INVOCATION_CACHE = CacheBuilder
@@ -69,7 +71,7 @@ public class RecordCache {
         try {
             SUB_INVOCATION_CACHE.get(invocation.getTraceId()).add(invocation);
         } catch (ExecutionException e) {
-            // impossible
+            log.error("impossible happened :) ", e);
         }
     }
 
