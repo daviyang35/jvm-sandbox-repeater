@@ -27,6 +27,8 @@ public class EnhanceModel {
      */
     private String classPattern;
 
+    private String[] classAnnotations;
+
     /**
      * 增强方法表达式，，支持通配符
      */
@@ -49,9 +51,10 @@ public class EnhanceModel {
      */
     private boolean includeSubClasses;
 
-    @ConstructorProperties({"classPattern", "methodPatterns", "watchTypes", "includeSubClasses"})
-    EnhanceModel(String classPattern, EnhanceModel.MethodPattern[] methodPatterns, Type[] watchTypes, boolean includeSubClasses) {
+    @ConstructorProperties({"classPattern", "classAnnotations", "methodPatterns", "watchTypes", "includeSubClasses"})
+    EnhanceModel(String classPattern, String[] classAnnotations, EnhanceModel.MethodPattern[] methodPatterns, Type[] watchTypes, boolean includeSubClasses) {
         this.classPattern = classPattern;
+        this.classAnnotations = classAnnotations;
         this.methodPatterns = methodPatterns;
         this.watchTypes = watchTypes;
         this.includeSubClasses = includeSubClasses;
@@ -80,6 +83,10 @@ public class EnhanceModel {
         return this.classPattern;
     }
 
+    public String[] getClassAnnotations() {
+        return this.classAnnotations;
+    }
+
     public EnhanceModel.MethodPattern[] getMethodPatterns() {
         return this.methodPatterns;
     }
@@ -97,12 +104,18 @@ public class EnhanceModel {
         private EnhanceModel.MethodPattern[] methodPatterns;
         private Type[] watchTypes;
         private boolean includeSubClasses;
+        private String[] classAnnotations;
 
         EnhanceModelBuilder() {
         }
 
         public EnhanceModel.EnhanceModelBuilder classPattern(String classPattern) {
             this.classPattern = classPattern;
+            return this;
+        }
+
+        public EnhanceModel.EnhanceModelBuilder classAnnotations(String[] classAnnotations) {
+            this.classAnnotations = classAnnotations;
             return this;
         }
 
@@ -122,7 +135,7 @@ public class EnhanceModel {
         }
 
         public EnhanceModel build() {
-            return new EnhanceModel(this.classPattern, this.methodPatterns, this.watchTypes, this.includeSubClasses);
+            return new EnhanceModel(this.classPattern, this.classAnnotations, this.methodPatterns, this.watchTypes, this.includeSubClasses);
         }
 
         @Override

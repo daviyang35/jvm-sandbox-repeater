@@ -88,7 +88,7 @@ public class Tracer {
     public static void end() {
         final TraceContext context = getContext();
         if (context != null && log.isDebugEnabled()) {
-            log.debug("[Tracer] stop  trace success,type={},traceId={},cost={}ms", context.getInvokeType(), context.getTraceId(), System.currentTimeMillis() - context.getTimestamp());
+            log.debug("[Tracer] stop trace success,type={},traceId={},cost={}ms", context.getInvokeType(), context.getTraceId(), System.currentTimeMillis() - context.getTimestamp());
         }
         getContextCarrie().remove();
     }

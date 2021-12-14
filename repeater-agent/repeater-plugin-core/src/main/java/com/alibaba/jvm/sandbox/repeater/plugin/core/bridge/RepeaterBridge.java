@@ -2,7 +2,6 @@ package com.alibaba.jvm.sandbox.repeater.plugin.core.bridge;
 
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.InvokeType;
 import com.alibaba.jvm.sandbox.repeater.plugin.spi.Repeater;
-import lombok.experimental.UtilityClass;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,10 +13,12 @@ import java.util.Map;
  *
  * @author zhaoyb1990
  */
-@UtilityClass
-public class RepeaterBridge {
+public final class RepeaterBridge {
 
-    private final Map<InvokeType, Repeater> cached = new HashMap<InvokeType, Repeater>();
+    private RepeaterBridge() {
+    }
+
+    private volatile Map<InvokeType, Repeater> cached = new HashMap<InvokeType, Repeater>();
 
     public static RepeaterBridge instance() {
         return RepeaterBridge.LazyInstanceHolder.INSTANCE;

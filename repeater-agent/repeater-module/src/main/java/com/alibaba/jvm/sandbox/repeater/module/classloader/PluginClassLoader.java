@@ -144,7 +144,7 @@ public class PluginClassLoader extends URLClassLoader {
     }
 
     /**
-     * 如果是JDK7+的版本, URLClassLoader实现了Closeable接口，直接调用即可
+     * 如果是JDK7+的版本, URLClassLoader实现了Closeable接口，直接调用即可S
      */
     private boolean closeOnJDK7AndPlus() {
         if (this instanceof Closeable) {

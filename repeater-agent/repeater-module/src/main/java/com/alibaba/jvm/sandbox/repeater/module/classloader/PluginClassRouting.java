@@ -206,7 +206,7 @@ public class PluginClassRouting {
         },
         ;
 
-        private String name;
+        private final String name;
 
         Matcher(String name) {
             this.name = name;

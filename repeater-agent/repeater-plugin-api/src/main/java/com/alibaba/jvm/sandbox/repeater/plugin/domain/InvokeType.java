@@ -26,6 +26,7 @@ public class InvokeType implements java.io.Serializable {
     public static final InvokeType JPA = new InvokeType("jpa");
 
     public static final InvokeType SOCKETIO = new InvokeType("socketio");
+    public static final InvokeType SPRING = new InvokeType("spring");
 
     public static final InvokeType OKHTTP = new InvokeType("okhttp");
 

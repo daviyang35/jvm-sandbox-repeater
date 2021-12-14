@@ -298,6 +298,10 @@ public class DefaultEventListener implements EventListener {
      * @return true/false
      */
     protected boolean isEntranceFinish(Event event) {
+        if (null == Tracer.getContext()) {
+            log.error("Tracer.getContext() is null. invokeType={},event={}", this.invokeType, event.type);
+            return false;
+        }
         return event.type != Type.BEFORE
                 // 开启trace的类型负责清理
                 && Tracer.getContext().getInvokeType() == invokeType;

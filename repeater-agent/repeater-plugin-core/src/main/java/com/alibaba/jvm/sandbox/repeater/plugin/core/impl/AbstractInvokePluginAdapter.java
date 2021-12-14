@@ -135,16 +135,23 @@ public abstract class AbstractInvokePluginAdapter implements InvokePlugin {
     private IBuildingForBehavior buildBehavior(EnhanceModel em) {
         IBuildingForBehavior behavior = null;
         IBuildingForClass builder4Class = new EventWatchBuilder(watcher).onClass(em.getClassPattern());
+        if (em.getClassAnnotations() != null) {
+            builder4Class.hasAnnotationTypes(em.getClassAnnotations());
+        }
         if (em.isIncludeSubClasses()) {
             builder4Class = builder4Class.includeSubClasses();
         }
-        for (EnhanceModel.MethodPattern mp : em.getMethodPatterns()) {
-            behavior = builder4Class.onBehavior(mp.getMethodName());
-            if (ArrayUtils.isNotEmpty(mp.getParameterType())) {
-                behavior.withParameterTypes(mp.getParameterType());
-            }
-            if (ArrayUtils.isNotEmpty(mp.getAnnotationTypes())) {
-                behavior.hasAnnotationTypes(mp.getAnnotationTypes());
+        if (null == em.getMethodPatterns()) {
+            builder4Class.onAnyBehavior();
+        } else {
+            for (EnhanceModel.MethodPattern mp : em.getMethodPatterns()) {
+                behavior = builder4Class.onBehavior(mp.getMethodName());
+                if (ArrayUtils.isNotEmpty(mp.getParameterType())) {
+                    behavior.withParameterTypes(mp.getParameterType());
+                }
+                if (ArrayUtils.isNotEmpty(mp.getAnnotationTypes())) {
+                    behavior.hasAnnotationTypes(mp.getAnnotationTypes());
+                }
             }
         }
         return behavior;
