@@ -62,7 +62,7 @@ public class TtlConcurrentAdvice {
                     .onBehavior("scheduleWithFixedDelay")
                     .onWatch(new AdviceAdapterListener(new AdviceListener() {
                         @Override
-                        protected void before(Advice advice) throws Throwable {
+                        protected void before(Advice advice) {
                             // 包装成ttl
                             final Object[] parameterArray = advice.getParameterArray();
                             final Class<?>[] parameterTypeArray = advice.getBehavior().getParameterTypes();

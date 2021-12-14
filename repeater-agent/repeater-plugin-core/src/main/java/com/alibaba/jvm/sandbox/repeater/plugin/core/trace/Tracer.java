@@ -21,9 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Tracer {
 
-    private static ThreadLocal<TraceContext> ttlContext = new TransmittableThreadLocal<TraceContext>();
+    private static final ThreadLocal<TraceContext> ttlContext = new TransmittableThreadLocal<TraceContext>();
 
-    private static ThreadLocal<TraceContext> normalContext = new ThreadLocal<TraceContext>();
+    private static final ThreadLocal<TraceContext> normalContext = new ThreadLocal<TraceContext>();
 
     /**
      * 开启追踪一次调用，非线程安全

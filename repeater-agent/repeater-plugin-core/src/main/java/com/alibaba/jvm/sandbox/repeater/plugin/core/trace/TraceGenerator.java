@@ -15,18 +15,19 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class TraceGenerator {
 
-    private static AtomicInteger count = new AtomicInteger(10000);
+    private static final AtomicInteger count = new AtomicInteger(10000);
 
-    private static String IP_COMPLETION = getCompletionIp();
+    private static final String IP_COMPLETION = getCompletionIp();
 
-    private static String END_FLAG = "ed";
+    private static final String END_FLAG = "ed";
 
     public static String generate() {
-        StringBuilder builder = new StringBuilder(32);
-        builder.append(IP_COMPLETION)
+        return new StringBuilder(32)
+                .append(IP_COMPLETION)
                 .append(System.currentTimeMillis())
-                .append(getNext()).append(END_FLAG);
-        return builder.toString();
+                .append(getNext())
+                .append(END_FLAG)
+                .toString();
     }
 
     public static boolean isValid(String traceId) {

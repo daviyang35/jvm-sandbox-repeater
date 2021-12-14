@@ -3,6 +3,7 @@ package com.alibaba.jvm.sandbox.repeater.plugin.core.wrapper;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.HttpInvocation;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.Invocation;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.RecordModel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  *
  * @author zhaoyb1990
  */
+@NoArgsConstructor
 public class RecordWrapper {
 
     private long timestamp;
@@ -35,9 +37,6 @@ public class RecordWrapper {
      * 子调用信息
      */
     private List<Invocation> subInvocations;
-
-    public RecordWrapper() {
-    }
 
     public RecordWrapper(RecordModel recordModel) {
         this.timestamp = recordModel.getTimestamp();

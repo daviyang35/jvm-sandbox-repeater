@@ -24,12 +24,12 @@ public class TraceContext {
     /**
      * 唯一标识一次调用
      */
-    private String traceId;
+    private final String traceId;
 
     /**
      * 调用发生时间
      */
-    private long timestamp;
+    private final long timestamp;
 
     /**
      * 被采样到 - 采样规则由入口调用计算，子调用不计算
@@ -44,7 +44,7 @@ public class TraceContext {
     /**
      * 额外需要透传的信息可以用这个承载
      */
-    private Map<String, String> extra = new HashMap<String, String>();
+    private final Map<String, String> extra = new HashMap<String, String>();
 
     TraceContext(String traceId) {
         this.timestamp = System.currentTimeMillis();

@@ -16,15 +16,15 @@ public class SpringContextInnerContainer {
     private SpringContextInnerContainer() {
     }
 
-    private AtomicBoolean agentLaunch = new AtomicBoolean(false);
+    private final AtomicBoolean agentLaunch = new AtomicBoolean(false);
 
     private final static SpringContextInnerContainer INSTANCE = new SpringContextInnerContainer();
 
     /**
      * spring bean用map存放
      */
-    private Map<String, Object> realBeanContext = new ConcurrentHashMap<String, Object>(16);
-    private Map<String, Object> classNameContext = new ConcurrentHashMap<String, Object>(16);
+    private final Map<String, Object> realBeanContext = new ConcurrentHashMap<String, Object>(16);
+    private final Map<String, Object> classNameContext = new ConcurrentHashMap<String, Object>(16);
 
     private static SpringContextInnerContainer getInstance() {
         return INSTANCE;

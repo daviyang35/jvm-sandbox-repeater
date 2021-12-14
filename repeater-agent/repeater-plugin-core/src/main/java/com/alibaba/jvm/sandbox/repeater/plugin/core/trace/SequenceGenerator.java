@@ -21,7 +21,7 @@ public class SequenceGenerator {
             .maximumSize(4096L)
             .build(new CacheLoader<String, AtomicInteger>() {
                 @Override
-                public AtomicInteger load(String traceId) throws Exception {
+                public AtomicInteger load(String traceId) {
                     return new AtomicInteger(0);
                 }
             });
