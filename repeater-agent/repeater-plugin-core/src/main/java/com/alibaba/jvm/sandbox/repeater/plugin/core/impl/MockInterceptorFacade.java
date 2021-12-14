@@ -5,7 +5,6 @@ import com.alibaba.jvm.sandbox.repeater.plugin.domain.mock.MockResponse;
 import com.alibaba.jvm.sandbox.repeater.plugin.spi.MockInterceptor;
 import com.google.common.collect.Lists;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -23,13 +22,12 @@ public class MockInterceptorFacade implements MockInterceptor {
         return INSTANCE;
     }
 
-    private List<MockInterceptor> interceptors = Lists.newArrayList();
+    private final List<MockInterceptor> interceptors = Lists.newArrayList();
 
     private MockInterceptorFacade() {
-        ServiceLoader<MockInterceptor> sl = ServiceLoader.load(MockInterceptor.class, this.getClass().getClassLoader());
-        final Iterator<MockInterceptor> iterator = sl.iterator();
-        while (iterator.hasNext()) {
-            interceptors.add(iterator.next());
+        ServiceLoader<MockInterceptor> loadedInterceptors = ServiceLoader.load(MockInterceptor.class, this.getClass().getClassLoader());
+        for (MockInterceptor interceptor : loadedInterceptors) {
+            interceptors.add(interceptor);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.alibaba.jvm.sandbox.repeater.plugin.core.impl;
 
+import com.alibaba.jvm.sandbox.api.event.Event;
 import com.alibaba.jvm.sandbox.api.listener.EventListener;
 import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder;
 import com.alibaba.jvm.sandbox.api.listener.ext.EventWatchBuilder.IBuildingForBehavior;
@@ -35,11 +36,11 @@ public abstract class AbstractInvokePluginAdapter implements InvokePlugin {
 
     private ModuleEventWatcher watcher;
 
-    private List<Integer> watchIds = Lists.newCopyOnWriteArrayList();
+    private final List<Integer> watchIds = Lists.newCopyOnWriteArrayList();
 
     private InvocationListener listener;
 
-    private AtomicBoolean watched = new AtomicBoolean(false);
+    private final AtomicBoolean watched = new AtomicBoolean(false);
 
     @Override
     public void onLoaded() throws PluginLifeCycleException {
@@ -78,12 +79,12 @@ public abstract class AbstractInvokePluginAdapter implements InvokePlugin {
     }
 
     @Override
-    public void onFrozen() throws PluginLifeCycleException {
+    public void onFrozen() {
         // default no-op
     }
 
     @Override
-    public void onUnloaded() throws PluginLifeCycleException {
+    public void onUnloaded() {
         // default no-op
     }
 
@@ -118,26 +119,35 @@ public abstract class AbstractInvokePluginAdapter implements InvokePlugin {
         }
 
         for (EnhanceModel em : enhanceModels) {
-            IBuildingForBehavior behavior = null;
-            IBuildingForClass builder4Class = new EventWatchBuilder(watcher).onClass(em.getClassPattern());
-            if (em.isIncludeSubClasses()) {
-                builder4Class = builder4Class.includeSubClasses();
-            }
-            for (EnhanceModel.MethodPattern mp : em.getMethodPatterns()) {
-                behavior = builder4Class.onBehavior(mp.getMethodName());
-                if (ArrayUtils.isNotEmpty(mp.getParameterType())) {
-                    behavior.withParameterTypes(mp.getParameterType());
-                }
-                if (ArrayUtils.isNotEmpty(mp.getAnnotationTypes())) {
-                    behavior.hasAnnotationTypes(mp.getAnnotationTypes());
-                }
-            }
+            IBuildingForBehavior behavior = buildBehavior(em);
             if (behavior != null) {
-                int watchId = behavior.onWatch(getEventListener(listener), em.getWatchTypes()).getWatchId();
-                watchIds.add(watchId);
-                log.info("add watcher success,type={},watcherId={}", getType().name(), watchId);
+                watchBehavior(behavior, em.getWatchTypes());
             }
         }
+    }
+
+    private void watchBehavior(IBuildingForBehavior behavior, Event.Type[] watchTypes) {
+        int watchId = behavior.onWatch(getEventListener(listener), watchTypes).getWatchId();
+        watchIds.add(watchId);
+        log.info("add watcher success,type={},watcherId={}", getType().name(), watchId);
+    }
+
+    private IBuildingForBehavior buildBehavior(EnhanceModel em) {
+        IBuildingForBehavior behavior = null;
+        IBuildingForClass builder4Class = new EventWatchBuilder(watcher).onClass(em.getClassPattern());
+        if (em.isIncludeSubClasses()) {
+            builder4Class = builder4Class.includeSubClasses();
+        }
+        for (EnhanceModel.MethodPattern mp : em.getMethodPatterns()) {
+            behavior = builder4Class.onBehavior(mp.getMethodName());
+            if (ArrayUtils.isNotEmpty(mp.getParameterType())) {
+                behavior.withParameterTypes(mp.getParameterType());
+            }
+            if (ArrayUtils.isNotEmpty(mp.getAnnotationTypes())) {
+                behavior.hasAnnotationTypes(mp.getAnnotationTypes());
+            }
+        }
+        return behavior;
     }
 
     /**

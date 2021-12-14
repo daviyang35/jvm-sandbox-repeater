@@ -19,7 +19,7 @@ public class JSonSerializer extends AbstractSerializerAdapter {
 
     @Override
     public byte[] serialize(Object object, ClassLoader classLoader) throws SerializeException {
-        ClassLoader swap = Thread.currentThread().getContextClassLoader();
+        ClassLoader originClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             if (classLoader != null) {
                 Thread.currentThread().setContextClassLoader(classLoader);
@@ -30,7 +30,7 @@ public class JSonSerializer extends AbstractSerializerAdapter {
             throw new SerializeException("[Error-1001]-json-serialize-error", t);
         } finally {
             if (classLoader != null) {
-                Thread.currentThread().setContextClassLoader(swap);
+                Thread.currentThread().setContextClassLoader(originClassLoader);
             }
         }
     }

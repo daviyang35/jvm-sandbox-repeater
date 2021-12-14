@@ -86,7 +86,7 @@ public class DefaultEventListener implements EventListener {
             // 执行采样计算（只有entrance插件负责计算采样，子调用插件不计算)
             if (!sample(event)) {
                 if (log.isDebugEnabled() && entrance) {
-                    log.debug("event missing sample rule,type={},event={}", invokeType, event.type);
+                    log.debug("event missing sample rule,type={},event={},offset={}", invokeType, event.type, eventOffset.get().get());
                 }
                 return;
             }
@@ -202,7 +202,7 @@ public class DefaultEventListener implements EventListener {
             return;
         }
         Invocation invocation = RecordCache.getInvocation(event.invokeId);
-        if (invocation == null) {
+        if (invocation == null && log.isDebugEnabled()) {
             log.debug("no valid invocation found in return,type={},traceId={}", invokeType, Tracer.getTraceId());
             return;
         }
@@ -221,7 +221,7 @@ public class DefaultEventListener implements EventListener {
             return;
         }
         Invocation invocation = RecordCache.getInvocation(event.invokeId);
-        if (invocation == null) {
+        if (invocation == null && log.isDebugEnabled()) {
             log.debug("no valid invocation found in throw,type={},traceId={}", invokeType, Tracer.getTraceId());
             return;
         }

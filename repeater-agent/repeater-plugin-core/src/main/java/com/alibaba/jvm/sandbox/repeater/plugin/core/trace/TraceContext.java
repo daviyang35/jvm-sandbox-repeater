@@ -2,6 +2,7 @@ package com.alibaba.jvm.sandbox.repeater.plugin.core.trace;
 
 import com.alibaba.jvm.sandbox.repeater.plugin.core.model.ApplicationModel;
 import com.alibaba.jvm.sandbox.repeater.plugin.domain.InvokeType;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,7 @@ import static java.lang.Long.parseLong;
  *
  * @author zhaoyb1990
  */
+@Slf4j
 public class TraceContext {
 
     /**
@@ -93,9 +95,15 @@ public class TraceContext {
             boolean sampled = isValid(traceId) && parseLong(getSampleBit(traceId)) % 10000 < ApplicationModel.instance().getSampleRate();
             this.invokeType = invokeType;
             this.sampled = sampled;
+            if (log.isDebugEnabled()) {
+                log.debug("inTimeSample={} ,invokeType={},require invokeType={}", sampled, this.invokeType, invokeType);
+            }
             return sampled;
         } else {
             // 下级入口不采集
+            if (log.isDebugEnabled()) {
+                log.debug("skip sample, invokeType={},require invokeType={}", this.invokeType, invokeType);
+            }
             return false;
         }
     }

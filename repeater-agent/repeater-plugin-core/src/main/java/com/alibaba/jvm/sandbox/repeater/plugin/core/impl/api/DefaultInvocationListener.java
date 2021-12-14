@@ -64,6 +64,9 @@ public class DefaultInvocationListener implements InvocationListener {
             }
             broadcast.sendRecord(recordModel);
         } else {
+            if (log.isDebugEnabled()) {
+                log.debug("cacheSubInvocation type={}", invocation.getType());
+            }
             RecordCache.cacheSubInvocation(invocation);
         }
     }

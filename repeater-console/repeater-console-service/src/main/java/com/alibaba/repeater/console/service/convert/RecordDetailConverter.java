@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -39,14 +40,12 @@ public class RecordDetailConverter implements ModelConverter<Record, RecordDetai
         Serializer hessian = SerializerProvider.instance().provide(Serializer.Type.HESSIAN);
         try {
             RecordWrapper wrapper = hessian.deserialize(source.getWrapperRecord(), RecordWrapper.class);
-            rdb.setSubInvocations(
-                    JacksonUtil.serialize(
-                            Optional.ofNullable(wrapper.getSubInvocations())
-                                    .orElse(Collections.emptyList())
-                                    .stream().map(invocationConverter::convert)
-                                    .collect(Collectors.toList())
-                    )
-            );
+            final List<InvocationBO> subInvocation = Optional.ofNullable(wrapper.getSubInvocations())
+                    .orElse(Collections.emptyList())
+                    .stream().map(invocationConverter::convert)
+                    .collect(Collectors.toList());
+
+            rdb.setSubInvocations(JacksonUtil.serialize(subInvocation));
         } catch (SerializeException e) {
             log.error("error deserialize record wrapper", e);
         }

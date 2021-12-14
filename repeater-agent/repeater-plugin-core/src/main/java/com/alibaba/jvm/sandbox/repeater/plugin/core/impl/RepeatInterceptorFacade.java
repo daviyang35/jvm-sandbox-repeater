@@ -4,7 +4,6 @@ import com.alibaba.jvm.sandbox.repeater.plugin.domain.RecordModel;
 import com.alibaba.jvm.sandbox.repeater.plugin.spi.RepeatInterceptor;
 import com.google.common.collect.Lists;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -22,13 +21,12 @@ public class RepeatInterceptorFacade implements RepeatInterceptor {
         return INSTANCE;
     }
 
-    private List<RepeatInterceptor> interceptors = Lists.newArrayList();
+    private final List<RepeatInterceptor> interceptors = Lists.newArrayList();
 
     private RepeatInterceptorFacade() {
-        ServiceLoader<RepeatInterceptor> sl = ServiceLoader.load(RepeatInterceptor.class, this.getClass().getClassLoader());
-        final Iterator<RepeatInterceptor> iterator = sl.iterator();
-        while (iterator.hasNext()) {
-            interceptors.add(iterator.next());
+        ServiceLoader<RepeatInterceptor> loadedInterceptors = ServiceLoader.load(RepeatInterceptor.class, this.getClass().getClassLoader());
+        for (RepeatInterceptor interceptor : loadedInterceptors) {
+            interceptors.add(interceptor);
         }
     }
 
