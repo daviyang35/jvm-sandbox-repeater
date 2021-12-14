@@ -26,7 +26,7 @@ public class RecordCache {
             .expireAfterWrite(30, TimeUnit.SECONDS)
             .build(new CacheLoader<Integer, Invocation>() {
                 @Override
-                public Invocation load(Integer s) throws Exception {
+                public Invocation load(Integer s) {
                     return new Invocation();
                 }
             });

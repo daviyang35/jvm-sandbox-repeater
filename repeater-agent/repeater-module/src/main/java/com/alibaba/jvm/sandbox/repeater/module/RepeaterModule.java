@@ -90,7 +90,7 @@ public class RepeaterModule implements Module, ModuleLifecycle {
 
     private HeartbeatHandler heartbeatHandler;
 
-    private AtomicBoolean initialized = new AtomicBoolean(false);
+    private final AtomicBoolean initialized = new AtomicBoolean(false);
 
     @Override
     public void onLoad() throws Throwable {
@@ -108,7 +108,7 @@ public class RepeaterModule implements Module, ModuleLifecycle {
     }
 
     @Override
-    public void onUnload() throws Throwable {
+    public void onUnload() {
         if (lifecycleManager != null) {
             lifecycleManager.release();
         }
@@ -116,12 +116,12 @@ public class RepeaterModule implements Module, ModuleLifecycle {
     }
 
     @Override
-    public void onActive() throws Throwable {
+    public void onActive() {
         log.info("onActive");
     }
 
     @Override
-    public void onFrozen() throws Throwable {
+    public void onFrozen() {
         log.info("onFrozen");
     }
 
@@ -185,6 +185,7 @@ public class RepeaterModule implements Module, ModuleLifecycle {
                         repeater.setBroadcast(broadcaster);
                     }
                 }
+
                 RepeaterBridge.instance().build(repeaters);
                 // 装载消息订阅器
                 List<SubscribeSupporter> subscribes = lifecycleManager.loadSubscribes();
@@ -215,9 +216,7 @@ public class RepeaterModule implements Module, ModuleLifecycle {
             }
             RepeatEvent event = new RepeatEvent();
             Map<String, String> requestParams = new HashMap<String, String>(16);
-            for (Map.Entry<String, String> entry : req.entrySet()) {
-                requestParams.put(entry.getKey(), entry.getValue());
-            }
+            requestParams.putAll(req);
             event.setRequestParams(requestParams);
             EventBusInner.post(event);
             writer.write("submit success");

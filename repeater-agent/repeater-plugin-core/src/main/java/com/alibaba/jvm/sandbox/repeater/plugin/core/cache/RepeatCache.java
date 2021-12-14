@@ -29,7 +29,7 @@ public class RepeatCache {
             .expireAfterWrite(30, TimeUnit.SECONDS)
             .build(new CacheLoader<String, RepeatContext>() {
                 @Override
-                public RepeatContext load(String s) throws Exception {
+                public RepeatContext load(String s) {
                     RepeatMeta meta = new RepeatMeta();
                     return new RepeatContext(meta, null, null);
                 }
@@ -41,7 +41,7 @@ public class RepeatCache {
             .expireAfterWrite(30, TimeUnit.SECONDS)
             .build(new CacheLoader<String, List<MockInvocation>>() {
                 @Override
-                public List<MockInvocation> load(String s) throws Exception {
+                public List<MockInvocation> load(String s) {
                     return Lists.newArrayList();
                 }
             });
