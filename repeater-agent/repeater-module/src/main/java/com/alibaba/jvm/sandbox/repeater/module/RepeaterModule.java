@@ -46,6 +46,7 @@ import org.kohsuke.MetaInfServices;
 
 import javax.annotation.Resource;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +92,8 @@ public class RepeaterModule implements Module, ModuleLifecycle {
     private HeartbeatHandler heartbeatHandler;
 
     private final AtomicBoolean initialized = new AtomicBoolean(false);
+
+    private static List<SubscribeSupporter> subscribes = new ArrayList<SubscribeSupporter>();
 
     @Override
     public void onLoad() throws Throwable {
@@ -187,8 +190,9 @@ public class RepeaterModule implements Module, ModuleLifecycle {
                 }
 
                 RepeaterBridge.instance().build(repeaters);
+                unregisterSubscribed();
                 // 装载消息订阅器
-                List<SubscribeSupporter> subscribes = lifecycleManager.loadSubscribes();
+                subscribes = lifecycleManager.loadSubscribes();
                 for (SubscribeSupporter subscribe : subscribes) {
                     subscribe.register();
                 }
@@ -198,6 +202,13 @@ public class RepeaterModule implements Module, ModuleLifecycle {
                 log.error("error occurred when initialize module", throwable);
             }
         }
+    }
+
+    private void unregisterSubscribed() {
+        for (SubscribeSupporter subscribe : subscribes) {
+            subscribe.unRegister();
+        }
+        subscribes.clear();
     }
 
     /**
