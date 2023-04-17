@@ -51,4 +51,7 @@ public class RecordDao {
                 pageable
         );
     }
+    public void delete(Long id) {
+        recordRepository.deleteById(id);
+    }
 }

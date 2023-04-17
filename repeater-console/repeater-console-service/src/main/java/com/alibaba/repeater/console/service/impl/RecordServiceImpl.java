@@ -13,6 +13,7 @@ import com.alibaba.repeater.console.dal.model.Record;
 import com.alibaba.repeater.console.service.RecordService;
 import com.alibaba.repeater.console.service.convert.ModelConverter;
 import com.alibaba.repeater.console.service.util.ConvertUtil;
+import com.alibaba.repeater.console.service.util.ResultHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -87,5 +88,15 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public RepeaterResult<RepeatModel> callback(String repeatId) {
         return null;
+    }
+
+    @Override
+    public RepeaterResult<Void> delete(Long id) {
+        try {
+            recordDao.delete(id);
+            return ResultHelper.success();
+        } catch (Exception e) {
+            return ResultHelper.fail("删除错误 - " + e.getMessage());
+        }
     }
 }

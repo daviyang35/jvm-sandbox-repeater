@@ -56,4 +56,11 @@ public interface RecordService {
      * @return 回放结果
      */
     RepeaterResult<RepeatModel> callback(String repeatId);
+
+    /**
+     * 增加删除接口 - Gabriel, 2023.4.14
+     * @param id
+     * @return 按id删除结果
+     */
+    RepeaterResult<Void> delete(Long id);
 }
