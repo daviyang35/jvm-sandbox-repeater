@@ -6,10 +6,7 @@ import com.alibaba.repeater.console.common.domain.RecordBO;
 import com.alibaba.repeater.console.common.domain.RecordDetailBO;
 import com.alibaba.repeater.console.common.params.RecordParams;
 import com.alibaba.repeater.console.service.RecordService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -42,4 +39,11 @@ public class OnlineController {
         }
         return result;
     }
+
+    // 2023.4.17, adding delete interface - Gabriel
+    @DeleteMapping(path = "/{id}")
+    public RepeaterResult<Void> delete(@PathVariable("id") Long id) {
+        return recordService.delete(id);
+    }
+
 }
